@@ -1,6 +1,8 @@
 import unittest
-
-from mock import patch, MagicMock, Mock
+from mock import (
+    Mock,
+    patch,
+)
 
 from openprocurement.contracting.ceasefire.includeme import includeme
 
@@ -21,3 +23,7 @@ class IncludemeTest(unittest.TestCase):
 
         assert info.called
         assert info.called_with('Init contracting.ceasefire plugin.')
+        assert str(config.mock_calls[0]) == \
+            "call.add_contract_contractType(<class 'openprocurement.contracting.ceasefire.models.Contract'>)"
+        assert str(config.mock_calls[1]) == \
+            "call.scan('openprocurement.contracting.ceasefire.views')"
