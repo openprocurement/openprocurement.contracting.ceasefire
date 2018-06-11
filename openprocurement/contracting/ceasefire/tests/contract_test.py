@@ -154,6 +154,16 @@ class ContractResourceTest(BaseWebTest):
             status=403
         )
 
+    def test_create_contract_with_all_accreditations(self):
+        self.app.authorization = ('Basic', ('broker', ''))
+        response = self.app.post_json(
+            '/contracts',
+            {
+                'data': contract_create_data,
+            },
+        )
+        assert response.status == '201 Created'
+
 
 class ContractSandboxParametersTest(unittest.TestCase):
     """Test Ceasefire Contract model sandbox_parameters attribute
