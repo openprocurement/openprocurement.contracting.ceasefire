@@ -24,7 +24,7 @@ from openprocurement.contracting.core.interfaces import (
     name='Ceasefire contracts',
     path=ENDPOINTS['contracts'],
     collection_path=ENDPOINTS['contracts_collection'],
-    contractType=CONTRACT_TYPE)
+    internal_type=CONTRACT_TYPE)
 class CeasefireContractResource(APIResource):
 
     @json_view(permission='view_contract')

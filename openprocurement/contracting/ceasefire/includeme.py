@@ -24,7 +24,13 @@ def includeme(config, plugin_config=None):
     LOGGER = getLogger(PKG.project_name)
 
     LOGGER.info('Init contracting.ceasefire plugin.')
-    config.add_contract_contractType(Contract)
+
+    contract_types = plugin_config.get('aliases', [])
+    if plugin_config.get('use_default', False):
+        config.add_contract_contractType(Contract, Contract.contractType.default)
+    for ct in contract_types:
+        config.add_contract_contractType(Contract, ct)
+
     config.scan("openprocurement.contracting.ceasefire.views")
     config.registry.registerAdapter(
         CeasefireContractManager,
