@@ -118,5 +118,6 @@ class Contract(BaseContract):
     status = StringType(choices=constants.CONTRACT_STATUSES, default=constants.DEFAULT_CONTRACT_STATUS)
     create_accreditation = 5
     edit_accreditation = 6
+    _internal_type = 'ceasefire'
     if SANDBOX_MODE:
         sandbox_parameters = StringType()
