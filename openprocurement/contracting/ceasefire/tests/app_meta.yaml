@@ -8,6 +8,7 @@ plugins:
         plugins:
           contracting.ceasefire:
             aliases: []
+            use_default: true
             migration: false
 
 config:
