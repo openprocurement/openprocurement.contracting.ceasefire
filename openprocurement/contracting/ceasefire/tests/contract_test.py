@@ -56,7 +56,6 @@ class ContractResourceTest(BaseWebTest):
                 'data': contract_create_data,
             }
         )
-        response_data = response.json['data']
         self.assertEqual(response.status, '201 Created', 'Contract not created')
 
     def test_set_sandbox_parameters(self):
@@ -88,6 +87,7 @@ class ContractResourceTest(BaseWebTest):
             ENDPOINTS['contracts'].format(
                 contract_id=contract_id))
         assert response.status == '200 OK'
+        assert '_internal_type' not in response.json['data'].keys()
 
     def test_get_contracts(self):
         # This test relies on delayed indexation after 1st GET request to the DB,
@@ -146,7 +146,7 @@ class ContractResourceTest(BaseWebTest):
 
     def test_create_contract_with_insufficient_acceditation(self):
         self.app.authorization = ('Basic', ('broker2', ''))
-        response = self.app.post_json(
+        self.app.post_json(
             '/contracts',
             {
                 'data': contract_create_data,
@@ -163,6 +163,29 @@ class ContractResourceTest(BaseWebTest):
             },
         )
         assert response.status == '201 Created'
+
+    def test_post_internal_type(self):
+        self.app.authorization = ('Basic', ('contracting', ''))
+        contract_data = copy(contract_create_data)
+        contract_data.update({'_internal_type': '42'})
+        response = self.app.post_json(
+            '/contracts',
+            {
+                'data': contract_data,
+            },
+            status=422
+        )
+        self.assertEqual(response.status, '422 Unprocessable Entity')
+
+    def test_patch_internal_type(self):
+        contract_id = create_contract(self)
+        # set allowed status
+        response = self.app.patch_json(
+            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            {'data': {'_internal_type': 'lucy_lu'}},
+            status=422
+        )
+        self.assertEqual(response.status, '422 Unprocessable Entity')
 
 
 class ContractSandboxParametersTest(unittest.TestCase):
