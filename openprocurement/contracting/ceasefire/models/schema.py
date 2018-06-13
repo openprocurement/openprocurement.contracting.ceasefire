@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from schematics.transforms import whitelist, blacklist
 from schematics.types import StringType, MD5Type
 from uuid import uuid4
 from zope.interface import implementer, Interface
@@ -24,41 +23,27 @@ from openprocurement.api.models.schematics_extender import (
 from openprocurement.contracting.core.models import (
     Contract as BaseContract,
     ProcuringEntity,
-    contract_create_role,
-    contract_view_role,
-    contract_edit_role,
 )
 from openprocurement.contracting.ceasefire import constants
+
+from .roles import (
+    MILESTONE_ROLES,
+    CONTRACT_ROLES,
+)
 
 
 class ICeasefireMilestone(Interface):
     """Contract marker interface
     """
 
+
 @implementer(ICeasefireMilestone)
 class Milestone(Model):
     """Contract milestone
     """
     class Options:
-        roles = {
-            'create':
-                blacklist(
-                    'dateMet',
-                    'dateModified',
-                    'dueDate',
-                    'id',
-                    'status',
-                    'type_',
-                ),
-            'edit':
-                blacklist(
-                    'dateModified',
-                    'dueDate',
-                    'id',
-                    'status',
-                    'type_',
-                )
-        }
+        roles = MILESTONE_ROLES
+
     # named so to not override built-in method name
     id = MD5Type(required=True, default=lambda: uuid4().hex)
     dateMet = IsoDateTimeType()
@@ -81,31 +66,8 @@ class Contract(BaseContract):
     """
 
     class Options:
-        roles = {
-            'create':
-                contract_create_role +
-                whitelist('contractType', 'buyers') +
-                blacklist('milestones'),
-            'view':
-                contract_view_role +
-                whitelist('contractType', 'milestones'),
-            'edit_active.confirmation':
-                contract_edit_role +
-                blacklist('buyers', 'milestones'),
-            'edit_active.payment':
-                contract_edit_role +
-                blacklist('buyers', 'milestones'),
-            'edit_active.approval':
-                contract_edit_role +
-                blacklist('buyers', 'milestones'),
-            'edit_active':
-                contract_edit_role +
-                blacklist('buyers', 'milestones'),
-            'edit_terminated':
-                whitelist(),
-            'edit_unsuccessful':
-                whitelist(),
-        }
+        roles = CONTRACT_ROLES
+
     awardID = StringType(required=True)  # overridden to make required
     buyers = ListType(ModelType(Organization), required=True)
     contractID = StringType(required=True)  # overridden to make required
