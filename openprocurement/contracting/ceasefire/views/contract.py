@@ -9,7 +9,7 @@ from openprocurement.contracting.core.utils import (
     contractingresource,
 )
 from openprocurement.contracting.ceasefire.constants import (
-    CONTRACT_TYPE,
+    CONTRACT_DEFAULT_TYPE,
     ENDPOINTS,
 )
 from openprocurement.contracting.core.validation import (
@@ -24,7 +24,7 @@ from openprocurement.contracting.core.interfaces import (
     name='Ceasefire contracts',
     path=ENDPOINTS['contracts'],
     collection_path=ENDPOINTS['contracts_collection'],
-    internal_type=CONTRACT_TYPE)
+    internal_type=CONTRACT_DEFAULT_TYPE)
 class CeasefireContractResource(APIResource):
 
     @json_view(permission='view_contract')
