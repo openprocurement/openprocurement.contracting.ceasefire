@@ -15,6 +15,9 @@ from openprocurement.contracting.ceasefire.models import (
     ICeasefireContract,
     ICeasefireMilestone,
 )
+from openprocurement.contracting.ceasefire.constants import (
+    CONTRACT_DEFAULT_TYPE,
+)
 
 
 
@@ -27,7 +30,7 @@ def includeme(config, plugin_config=None):
 
     contract_types = plugin_config.get('aliases', [])
     if plugin_config.get('use_default', False):
-        config.add_contract_contractType(Contract, Contract.contractType.default)
+        config.add_contract_contractType(Contract, CONTRACT_DEFAULT_TYPE)
     for ct in contract_types:
         config.add_contract_contractType(Contract, ct)
 

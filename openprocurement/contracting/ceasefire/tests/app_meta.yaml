@@ -12,6 +12,8 @@ plugins:
             migration: false
 
 config:
+  main:
+    api_version: '2.5'
   auth:
     type: file
     src: auth.ini

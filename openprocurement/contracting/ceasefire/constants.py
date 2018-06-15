@@ -18,7 +18,7 @@ CONTRACT_STATUSES = (  # ORDER MATTERS -- ПОРЯДОК СТАТУСІВ ВАЖ
     'unsuccessful',
 )
 DEFAULT_CONTRACT_STATUS = 'active.confirmation'
-CONTRACT_TYPE = 'ceasefire'
+CONTRACT_DEFAULT_TYPE = 'ceasefire'
 ## Milestone
 MILESTONE_TYPES = (  # ORDER MATTERS -- ПОРЯДОК ТИПІВ ВАЖЛИВИЙ
     'financing',
