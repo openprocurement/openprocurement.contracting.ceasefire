@@ -11,8 +11,8 @@ from openprocurement.api.constants import (
 from openprocurement.api.utils import (
     calculate_business_date,
 )
-from openprocurement.auctions.core.tests.base import (
-    BaseWebTest,
+from openprocurement.contracting.ceasefire.tests.base import (
+    BaseWebTest
 )
 from openprocurement.contracting.ceasefire.constants import (
     ENDPOINTS,
@@ -30,7 +30,6 @@ from openprocurement.contracting.ceasefire.models import (
 
 class ContractResourceTest(BaseWebTest):
 
-    relative_to = os.path.dirname(__file__)
 
     def setUp(self):
         super(ContractResourceTest, self).setUp()
@@ -39,7 +38,7 @@ class ContractResourceTest(BaseWebTest):
     def test_contract_post_by_contracting(self):
         self.app.authorization = ('Basic', ('contracting', ''))
         response = self.app.post_json(
-            '/contracts',
+            'contracts',
             {
                 'data': contract_create_data,
             }
@@ -51,7 +50,7 @@ class ContractResourceTest(BaseWebTest):
 
     def test_contract_post_by_broker(self):
         response = self.app.post_json(
-            '/contracts',
+            'contracts',
             {
                 'data': contract_create_data,
             }
@@ -63,7 +62,7 @@ class ContractResourceTest(BaseWebTest):
         contract_data['sandbox_parameters'] = 'some_params'
         if SANDBOX_MODE:
             response = self.app.post_json(
-                '/contracts',
+                'contracts',
                 {
                     'data': contract_data,
                 }
@@ -73,7 +72,7 @@ class ContractResourceTest(BaseWebTest):
             self.assertEqual(contract_data.get('sandbox_parameters'), 'some_params')
         else:
             response = self.app.post_json(
-                '/contracts',
+                'contracts',
                 {
                     'data': contract_data,
                 },
@@ -147,7 +146,7 @@ class ContractResourceTest(BaseWebTest):
     def test_create_contract_with_insufficient_acceditation(self):
         self.app.authorization = ('Basic', ('broker2', ''))
         self.app.post_json(
-            '/contracts',
+            'contracts',
             {
                 'data': contract_create_data,
             },
@@ -157,7 +156,7 @@ class ContractResourceTest(BaseWebTest):
     def test_create_contract_with_all_accreditations(self):
         self.app.authorization = ('Basic', ('broker', ''))
         response = self.app.post_json(
-            '/contracts',
+            'contracts',
             {
                 'data': contract_create_data,
             },
@@ -169,7 +168,7 @@ class ContractResourceTest(BaseWebTest):
         contract_data = copy(contract_create_data)
         contract_data.update({'_internal_type': '42'})
         response = self.app.post_json(
-            '/contracts',
+            'contracts',
             {
                 'data': contract_data,
             },
