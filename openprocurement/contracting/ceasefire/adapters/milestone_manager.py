@@ -5,9 +5,8 @@ from datetime import datetime, date
 from zope.interface import implementer
 
 from openprocurement.api.utils import error_handler
-from openprocurement.auctions.core.utils import calculate_business_date, validate_with
+from openprocurement.auctions.core.utils import calculate_business_date
 from openprocurement.contracting.core.interfaces import (
-    IContractManager,
     IMilestoneManager,
 )
 from openprocurement.contracting.ceasefire.utils import search_list_with_dicts
@@ -19,30 +18,6 @@ from openprocurement.contracting.ceasefire.constants import (
     MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS,
     MILESTONE_TYPES,
 )
-from openprocurement.contracting.ceasefire.validators import (
-    validate_allowed_contract_statuses,
-)
-
-
-@implementer(IContractManager)
-class CeasefireContractManager(object):
-
-    def __init__(self, context):
-        self.context = context
-
-    def create_contract(self, request):
-        pass
-
-    change_validators = (
-        validate_allowed_contract_statuses,
-    )
-
-    @validate_with(change_validators)
-    def change_contract(self, request):
-        new_status = request.validated['data'].get('status')
-        if new_status == 'active.payment':
-            milestone_manager = CeasefireMilestoneManager(request.context)
-            milestone_manager.create_milestones(request)
 
 
 @implementer(IMilestoneManager)
