@@ -33,8 +33,28 @@ CONTRACT_ROLES = {
         whitelist('contractType', 'buyers') +
         blacklist('milestones'),
     'view':
-        contract_view_role +
-        whitelist('contractType', 'milestones'),
+        whitelist(
+            'awardID',
+            'buyers',
+            'changes',
+            'contractID',
+            'contractNumber',
+            'contractType',
+            'dateSigned',
+            'description',
+            'documents',
+            'id',
+            'items',
+            'merchandisingobject',
+            'milestones',
+            'milestones',
+            'period',
+            'procuringEntity',
+            'status',
+            'title',
+            'type',
+            'value',
+        ),
     'edit_active.confirmation':
         contract_edit_role +
         blacklist('buyers', 'milestones'),

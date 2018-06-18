@@ -26,6 +26,9 @@ from .fixtures.contract_fixtures import (
 from openprocurement.contracting.ceasefire.models import (
     Contract,
 )
+from openprocurement.contracting.ceasefire.tests.constants import (
+    CONTRACT_FIELDS_TO_HIDE,
+)
 
 
 class ContractResourceTest(BaseWebTest):
@@ -35,6 +38,15 @@ class ContractResourceTest(BaseWebTest):
     def setUp(self):
         super(ContractResourceTest, self).setUp()
         self.app.authorization = ('Basic', ('broker5', ''))
+
+    def check_forbidden_contract_fields(self, fields):
+        for response_field in fields:
+            if response_field in CONTRACT_FIELDS_TO_HIDE:
+                self.fail(
+                    'Unexpectedly found {0} field in PATCH response of Ceasefire contract'.format(
+                        response_field
+                )
+            )
 
     def test_contract_post_by_contracting(self):
         self.app.authorization = ('Basic', ('contracting', ''))
@@ -130,6 +142,17 @@ class ContractResourceTest(BaseWebTest):
             target_dueDate.isoformat(),
             "dueDate of financial milestone wasn't calculated right"
         )
+
+    def test_patch_response_have_not_excessive_fields(self):
+        contract_id = create_contract(self)
+        contract = Contract(contract_create_data)
+        response = self.app.patch_json(
+            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            {'data': {'status': 'active.payment'}},
+        )
+        self.assertEqual(response.status, '200 OK')
+        response_data_keys = response.json['data'].keys()
+        self.check_forbidden_contract_fields(response_data_keys)
 
     def test_patch_contract_forbidden_status(self):
         contract_id = create_contract(self)

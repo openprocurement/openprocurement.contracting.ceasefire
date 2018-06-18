@@ -48,4 +48,4 @@ class CeasefireContractResource(APIResource):
                     {'MESSAGE_ID': 'ceasefire_contract_patch'}
                     )
                 )
-            return {'data': self.request.context.serialize()}
+            return {'data': self.request.context.serialize('view')}
