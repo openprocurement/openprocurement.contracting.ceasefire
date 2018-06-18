@@ -78,6 +78,9 @@ class Contract(BaseContract):
     period = ModelType(Period)
     procuringEntity = ModelType(ProcuringEntity)  # overridden to make not required
     status = StringType(choices=constants.CONTRACT_STATUSES, default=constants.DEFAULT_CONTRACT_STATUS)
+    type_ = StringType(serialized_name='type')
+    merchandisingObject = StringType()
+
     create_accreditation = 5
     edit_accreditation = 6
     _internal_type = 'ceasefire'
