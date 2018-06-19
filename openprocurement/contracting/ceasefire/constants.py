@@ -2,10 +2,10 @@
 from datetime import timedelta
 # Endpoints
 ENDPOINTS = {
-    'contracts': '/contracts/{contract_id}',
-    'contracts_collection': '/contracts',
-    'milestones': '/contracts/{contract_id}/milestones/{milestone_id}',
-    'milestones_collection': '/contracts/{contract_id}/milestones',
+    'contracts': 'contracts/{contract_id}',
+    'contracts_collection': 'contracts',
+    'milestones': 'contracts/{contract_id}/milestones/{milestone_id}',
+    'milestones_collection': 'contracts/{contract_id}/milestones',
 }
 # Model constants
 ## Contract

@@ -2,8 +2,8 @@
 import os
 
 from datetime import timedelta
-from openprocurement.auctions.core.tests.base import (
-    BaseWebTest,
+from openprocurement.contracting.ceasefire.tests.base import (
+    BaseWebTest
 )
 from openprocurement.contracting.ceasefire.constants import (
     ENDPOINTS,
@@ -27,8 +27,6 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
 
 
 class MilestoneResourceTest(BaseWebTest):
-
-    relative_to = os.path.dirname(__file__)
 
     def setUp(self):
         super(MilestoneResourceTest, self).setUp()
