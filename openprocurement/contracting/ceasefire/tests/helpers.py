@@ -73,5 +73,4 @@ def get_document(test_case, contract_id, document_id, serialize=True):
         doc = BaseDocument(response.json['data'])
         doc.validate()
         return doc
-    else:
-        return response
+    return response
