@@ -62,3 +62,19 @@ class CeasefireDocumentResourceTest(BaseWebTest):
         assert response.status == '200 OK'
         assert title_before_patch != target_tile
         assert title_after_patch == target_tile
+
+    def test_patch_forbidden_field(self):
+        new_id = 'abcd' * 8
+
+        contract_id, document_id = prepare_contract_with_document(self)
+        pre_patch_document_id = get_document(self, contract_id, document_id).id
+        response = self.app.patch_json(
+            CORE_ENDPOINTS['documents'].format(
+                contract_id=contract_id,
+                document_id=document_id
+            ),
+            {'data': {'id': new_id}}
+        )
+        document_id = get_document(self, contract_id, document_id).id
+        assert document_id != new_id
+        assert document_id == pre_patch_document_id, 'id must remain unchanged'
