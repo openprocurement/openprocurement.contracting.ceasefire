@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 
-from openprocurement.api.tests.base import (
-    BaseResourceWebTest,
+from openprocurement.contracting.ceasefire.tests.base import (
+    BaseWebTest
 )
 from openprocurement.contracting.ceasefire.tests.helpers import (
     get_contract,
@@ -20,7 +20,7 @@ from openprocurement.contracting.core.constants import (
 )
 
 
-class CeasefireDocumentResourceTest(BaseResourceWebTest):
+class CeasefireDocumentResourceTest(BaseWebTest):
 
     docservice = True
     relative_to = os.path.dirname(__file__)

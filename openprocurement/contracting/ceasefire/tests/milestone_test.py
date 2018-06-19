@@ -26,7 +26,7 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
 )
 
 
-class MilestoneResourceTest(BaseResourceWebTest):
+class MilestoneResourceTest(BaseWebTest):
 
     def setUp(self):
         super(MilestoneResourceTest, self).setUp()

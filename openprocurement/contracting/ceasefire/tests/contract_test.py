@@ -31,7 +31,7 @@ from openprocurement.contracting.ceasefire.tests.constants import (
 )
 
 
-class ContractResourceTest(BaseResourceWebTest):
+class ContractResourceTest(BaseWebTest):
 
 
     def setUp(self):
