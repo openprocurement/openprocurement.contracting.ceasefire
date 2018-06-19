@@ -45,3 +45,20 @@ class CeasefireDocumentResourceTest(BaseWebTest):
             )
         )
         assert response.status == '200 OK'
+
+    def test_patch_ok(self):
+        target_tile = 'trololo'
+
+        contract_id, document_id = prepare_contract_with_document(self)
+        title_before_patch = get_document(self, contract_id, document_id).title
+        response = self.app.patch_json(
+            CORE_ENDPOINTS['documents'].format(
+                contract_id=contract_id,
+                document_id=document_id
+            ),
+            {'data': {'title': target_tile}}
+        )
+        title_after_patch = response.json['data']['title']
+        assert response.status == '200 OK'
+        assert title_before_patch != target_tile
+        assert title_after_patch == target_tile
