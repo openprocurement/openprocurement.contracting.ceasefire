@@ -52,7 +52,10 @@ def patch_milestone(test_case, contract_id, milestone_id, data, status=200):
 def post_document(test_case, contract_id, data=None):
     if data is None:
         data = deepcopy(test_document_data)
-        data.update({'url': test_case.generate_docservice_url()})
+        data.update({
+            'url': test_case.generate_docservice_url(),
+            'documentOf': 'lot',
+        })
 
     url = CORE_ENDPOINTS['documents_collection'].format(
         contract_id=contract_id
@@ -63,7 +66,7 @@ def post_document(test_case, contract_id, data=None):
 
 
 def get_document(test_case, contract_id, document_id, serialize=True):
-    response = test_case.app.get(ENDPOINTS['documents'].format(
+    response = test_case.app.get(CORE_ENDPOINTS['documents'].format(
         contract_id=contract_id,
         document_id=document_id))
     if serialize:

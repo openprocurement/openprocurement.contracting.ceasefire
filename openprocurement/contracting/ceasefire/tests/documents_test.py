@@ -12,6 +12,12 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
 from openprocurement.contracting.ceasefire.tests.fixtures.contract_fixtures import (
     create_contract,
 )
+from openprocurement.contracting.ceasefire.tests.fixtures.document_fixtures import (
+    prepare_contract_with_document,
+)
+from openprocurement.contracting.core.constants import (
+    ENDPOINTS as CORE_ENDPOINTS,
+)
 
 
 class CeasefireDocumentResourceTest(BaseResourceWebTest):
@@ -29,3 +35,13 @@ class CeasefireDocumentResourceTest(BaseResourceWebTest):
 
         contract_after_document_post = get_contract(self, contract_id)
         assert len(contract_after_document_post.documents) == 1
+
+    def test_get_ok(self):
+        contract_id, document_id = prepare_contract_with_document(self)
+        response = self.app.get(
+            CORE_ENDPOINTS['documents'].format(
+                contract_id=contract_id,
+                document_id=document_id
+            )
+        )
+        assert response.status == '200 OK'
