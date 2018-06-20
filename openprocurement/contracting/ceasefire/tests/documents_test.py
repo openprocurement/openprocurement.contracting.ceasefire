@@ -25,6 +25,10 @@ class CeasefireDocumentResourceTest(BaseWebTest):
     docservice = True
     relative_to = os.path.dirname(__file__)
 
+    def setUp(self):
+        super(CeasefireDocumentResourceTest, self).setUp()
+        self.app.authorization = ('Basic', ('broker5', ''))
+
     def test_post_ok(self):
         contract_id = create_contract(self)
         contract_before_document_post = get_contract(self, contract_id)
@@ -78,3 +82,22 @@ class CeasefireDocumentResourceTest(BaseWebTest):
         document_id = get_document(self, contract_id, document_id).id
         assert document_id != new_id
         assert document_id == pre_patch_document_id, 'id must remain unchanged'
+
+    def test_post_with_wrong_user(self):
+        contract_id = create_contract(self)
+        self.app.authorization = ('Basic', ('petro', ''))
+
+        post_document(self, contract_id, status_code=403)
+
+    def test_patch_with_wrong_user(self):
+        contract_id, document_id = prepare_contract_with_document(self)
+        self.app.authorization = ('Basic', ('petro', ''))
+
+        response = self.app.patch_json(
+            CORE_ENDPOINTS['documents'].format(
+                contract_id=contract_id,
+                document_id=document_id
+            ),
+            {'data': {'title': 'lalal'}},
+            status=403
+        )
