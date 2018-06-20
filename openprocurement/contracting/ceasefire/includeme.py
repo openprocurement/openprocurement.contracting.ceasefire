@@ -6,8 +6,10 @@ from openprocurement.contracting.core.interfaces import (
     IContractManager,
     IMilestoneManager,
 )
-from openprocurement.contracting.ceasefire.adapters import (
+from openprocurement.contracting.ceasefire.adapters.contract_manager import (
     CeasefireContractManager,
+)
+from openprocurement.contracting.ceasefire.adapters.milestone_manager import (
     CeasefireMilestoneManager,
 )
 from openprocurement.contracting.ceasefire.models import (
@@ -18,8 +20,6 @@ from openprocurement.contracting.ceasefire.models import (
 from openprocurement.contracting.ceasefire.constants import (
     CONTRACT_DEFAULT_TYPE,
 )
-
-
 
 
 def includeme(config, plugin_config=None):

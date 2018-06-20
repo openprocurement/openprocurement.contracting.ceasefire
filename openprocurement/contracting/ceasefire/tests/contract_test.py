@@ -1,4 +1,3 @@
-import os
 import time
 import unittest
 
@@ -33,7 +32,6 @@ from openprocurement.contracting.ceasefire.tests.constants import (
 
 class ContractResourceTest(BaseWebTest):
 
-
     def setUp(self):
         super(ContractResourceTest, self).setUp()
         self.app.authorization = ('Basic', ('broker5', ''))
@@ -44,13 +42,13 @@ class ContractResourceTest(BaseWebTest):
                 self.fail(
                     'Unexpectedly found {0} field in PATCH response of Ceasefire contract'.format(
                         response_field
+                    )
                 )
-            )
 
     def test_contract_post_by_contracting(self):
         self.app.authorization = ('Basic', ('contracting', ''))
         response = self.app.post_json(
-            'contracts',
+            ENDPOINTS['contracts_collection'],
             {
                 'data': contract_create_data,
             }
@@ -62,7 +60,7 @@ class ContractResourceTest(BaseWebTest):
 
     def test_contract_post_by_broker(self):
         response = self.app.post_json(
-            'contracts',
+            ENDPOINTS['contracts_collection'],
             {
                 'data': contract_create_data,
             }
@@ -74,7 +72,7 @@ class ContractResourceTest(BaseWebTest):
         contract_data['sandbox_parameters'] = 'some_params'
         if SANDBOX_MODE:
             response = self.app.post_json(
-                'contracts',
+                ENDPOINTS['contracts_collection'],
                 {
                     'data': contract_data,
                 }
@@ -84,7 +82,7 @@ class ContractResourceTest(BaseWebTest):
             self.assertEqual(contract_data.get('sandbox_parameters'), 'some_params')
         else:
             response = self.app.post_json(
-                'contracts',
+                ENDPOINTS['contracts_collection'],
                 {
                     'data': contract_data,
                 },
@@ -144,7 +142,6 @@ class ContractResourceTest(BaseWebTest):
 
     def test_patch_response_have_not_excessive_fields(self):
         contract_id = create_contract(self)
-        contract = Contract(contract_create_data)
         response = self.app.patch_json(
             ENDPOINTS['contracts'].format(contract_id=contract_id),
             {'data': {'status': 'active.payment'}},
@@ -169,7 +166,7 @@ class ContractResourceTest(BaseWebTest):
     def test_create_contract_with_insufficient_acceditation(self):
         self.app.authorization = ('Basic', ('broker2', ''))
         self.app.post_json(
-            'contracts',
+            ENDPOINTS['contracts_collection'],
             {
                 'data': contract_create_data,
             },
@@ -179,7 +176,7 @@ class ContractResourceTest(BaseWebTest):
     def test_create_contract_with_all_accreditations(self):
         self.app.authorization = ('Basic', ('broker', ''))
         response = self.app.post_json(
-            'contracts',
+            ENDPOINTS['contracts_collection'],
             {
                 'data': contract_create_data,
             },
@@ -191,7 +188,7 @@ class ContractResourceTest(BaseWebTest):
         contract_data = copy(contract_create_data)
         contract_data.update({'_internal_type': '42'})
         response = self.app.post_json(
-            'contracts',
+            ENDPOINTS['contracts_collection'],
             {
                 'data': contract_data,
             },

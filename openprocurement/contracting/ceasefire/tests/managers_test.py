@@ -14,8 +14,10 @@ from openprocurement.auctions.core.utils import (
 from openprocurement.contracting.core.utils import (
     get_milestone_by_type,
 )
-from openprocurement.contracting.ceasefire.adapters import (
+from openprocurement.contracting.ceasefire.adapters.contract_manager import (
     CeasefireContractManager,
+)
+from openprocurement.contracting.ceasefire.adapters.milestone_manager import (
     CeasefireMilestoneManager,
 )
 from openprocurement.contracting.ceasefire.models import (
