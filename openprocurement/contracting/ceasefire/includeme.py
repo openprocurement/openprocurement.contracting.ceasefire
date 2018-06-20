@@ -4,8 +4,6 @@ from pkg_resources import get_distribution
 
 from openprocurement.contracting.core.interfaces import (
     IContractManager,
-    IDocument,
-    IDocumentManager,
     IMilestoneManager,
 )
 from openprocurement.contracting.ceasefire.adapters.contract_manager import (
@@ -13,9 +11,6 @@ from openprocurement.contracting.ceasefire.adapters.contract_manager import (
 )
 from openprocurement.contracting.ceasefire.adapters.milestone_manager import (
     CeasefireMilestoneManager,
-)
-from openprocurement.contracting.ceasefire.adapters.document_manager import (
-    CeasefireContractDocumentManager,
 )
 from openprocurement.contracting.ceasefire.models import (
     Contract,
@@ -49,9 +44,4 @@ def includeme(config, plugin_config=None):
         CeasefireMilestoneManager,
         (ICeasefireMilestone,),
         IMilestoneManager
-    )
-    config.registry.registerAdapter(
-        CeasefireContractDocumentManager,
-        (IDocument,),
-        IDocumentManager
     )

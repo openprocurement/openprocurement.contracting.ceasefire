@@ -11,6 +11,9 @@ from openprocurement.contracting.ceasefire.validators import (
 from openprocurement.contracting.ceasefire.adapters.milestone_manager import (
     CeasefireMilestoneManager,
 )
+from openprocurement.contracting.ceasefire.adapters.document_manager import (
+    CeasefireContractDocumentManager,
+)
 
 
 @implementer(IContractManager)
@@ -18,6 +21,7 @@ class CeasefireContractManager(object):
 
     def __init__(self, context):
         self.context = context
+        self.document_manager = CeasefireContractDocumentManager
 
     def create_contract(self, request):
         pass
