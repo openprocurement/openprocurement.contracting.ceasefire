@@ -72,7 +72,7 @@ class CeasefireDocumentResourceTest(BaseWebTest):
 
         contract_id, document_id = prepare_contract_with_document(self)
         pre_patch_document_id = get_document(self, contract_id, document_id).id
-        response = self.app.patch_json(
+        self.app.patch_json(
             CORE_ENDPOINTS['documents'].format(
                 contract_id=contract_id,
                 document_id=document_id
@@ -93,7 +93,7 @@ class CeasefireDocumentResourceTest(BaseWebTest):
         contract_id, document_id = prepare_contract_with_document(self)
         self.app.authorization = ('Basic', ('petro', ''))
 
-        response = self.app.patch_json(
+        self.app.patch_json(
             CORE_ENDPOINTS['documents'].format(
                 contract_id=contract_id,
                 document_id=document_id
