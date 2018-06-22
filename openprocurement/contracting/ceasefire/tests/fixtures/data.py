@@ -20,5 +20,5 @@ contract_create_data = {
     'auction_id': '0b7bca6feeb644e987ded0429f1ec167',
     'procuringEntity': test_procuringEntity,
     'title': 'Test Contract',
-    'buyers': [test_organization],
+    'suppliers': [test_organization],
 }
