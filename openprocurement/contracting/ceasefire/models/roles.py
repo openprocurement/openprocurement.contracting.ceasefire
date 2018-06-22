@@ -30,12 +30,12 @@ MILESTONE_ROLES = {
 CONTRACT_ROLES = {
     'create':
         contract_create_role +
-        whitelist('contractType', 'buyers') +
+        whitelist('contractType', 'suppliers') +
         blacklist('milestones'),
     'view':
         whitelist(
             'awardID',
-            'buyers',
+            'suppliers',
             'changes',
             'contractID',
             'contractNumber',
@@ -57,16 +57,16 @@ CONTRACT_ROLES = {
         ),
     'edit_active.confirmation':
         contract_edit_role +
-        blacklist('buyers', 'milestones'),
+        blacklist('suppliers', 'milestones'),
     'edit_active.payment':
         contract_edit_role +
-        blacklist('buyers', 'milestones'),
+        blacklist('suppliers', 'milestones'),
     'edit_active.approval':
         contract_edit_role +
-        blacklist('buyers', 'milestones'),
+        blacklist('suppliers', 'milestones'),
     'edit_active':
         contract_edit_role +
-        blacklist('buyers', 'milestones'),
+        blacklist('suppliers', 'milestones'),
     'edit_terminated':
         whitelist(),
     'edit_unsuccessful':
