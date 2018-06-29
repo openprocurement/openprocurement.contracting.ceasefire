@@ -3,6 +3,7 @@ from openprocurement.contracting.ceasefire.constants import (
     ENDPOINTS,
 )
 from .data import contract_create_data
+from munch import munchify
 
 
 def create_contract(test_case, data=None):
@@ -15,4 +16,4 @@ def create_contract(test_case, data=None):
         }
     )
     assert response.status == '201 Created', 'Contract not created'
-    return response.json['data']['id']
+    return munchify(response.json)

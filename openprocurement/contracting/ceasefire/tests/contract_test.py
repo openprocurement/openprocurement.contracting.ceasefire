@@ -90,7 +90,8 @@ class ContractResourceTest(BaseWebTest):
             )
 
     def test_get_contract(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
+        contract_id = contract.data.id
         self.app.authorization = ('Basic', ('broker1', ''))
         response = self.app.get(
             ENDPOINTS['contracts'].format(
@@ -103,8 +104,10 @@ class ContractResourceTest(BaseWebTest):
         # so if it falls - try to increase sleep time.
         # P.S. I didn't use docstring to not override nosetest's output with it
         self.app.authorization = ('Basic', ('contracting', ''))
-        contract_id_1 = create_contract(self)
-        contract_id_2 = create_contract(self)
+        contract = create_contract(self)
+        contract_id_1 = contract.data.id
+        contract = create_contract(self)
+        contract_id_2 = contract.data.id
         self.app.get(ENDPOINTS['contracts_collection'])
         time.sleep(0.2)  # wait for delayed indexation of listing, seconds
         response = self.app.get(ENDPOINTS['contracts_collection'])
@@ -113,10 +116,10 @@ class ContractResourceTest(BaseWebTest):
         assert contract_id_2 in keys_returned
 
     def test_patch_contract_status_active_payment(self):
-        contract_id = create_contract(self)
-        contract = Contract(contract_create_data)
+        contract = create_contract(self)
+        contract_id = contract.data.id
         response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
             {'data': {'status': 'active.payment'}},
         )
         self.assertEqual(response.status, '200 OK')
@@ -127,6 +130,7 @@ class ContractResourceTest(BaseWebTest):
             "Milestones weren't created"
         )
         financial_milestone = response_data['milestones'][0]
+        contract = Contract(contract_create_data)
         target_dueDate = calculate_business_date(
             contract.dateSigned,
             MILESTONE_FINANCING_DUEDATE_OFFSET,
@@ -141,9 +145,10 @@ class ContractResourceTest(BaseWebTest):
         )
 
     def test_patch_response_have_not_excessive_fields(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
+        contract_id = contract.data.id
         response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
             {'data': {'status': 'active.payment'}},
         )
         self.assertEqual(response.status, '200 OK')
@@ -151,14 +156,15 @@ class ContractResourceTest(BaseWebTest):
         self.check_forbidden_contract_fields(response_data_keys)
 
     def test_patch_contract_forbidden_status(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
+        contract_id = contract.data.id
         # set allowed status
         self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
             {'data': {'status': 'active.payment'}},
         )
         self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
             {'data': {'status': 'active.approval'}},
             status=403
         )
@@ -197,10 +203,11 @@ class ContractResourceTest(BaseWebTest):
         self.assertEqual(response.status, '422 Unprocessable Entity')
 
     def test_patch_internal_type(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
+        contract_id = contract.data.id
         # set allowed status
         response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id),
+            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
             {'data': {'_internal_type': 'lucy_lu'}},
             status=422
         )

@@ -21,7 +21,7 @@ from openprocurement.contracting.core.interfaces import (
 
 
 @contractingresource(
-    name='Ceasefire contracts',
+    name='ceasefire:Contract',
     path=ENDPOINTS['contracts'],
     collection_path=ENDPOINTS['contracts_collection'],
     internal_type=CONTRACT_DEFAULT_TYPE)

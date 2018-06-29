@@ -8,6 +8,7 @@ requires = [
 
 test_requires = requires + [
     'webtest',
+    'munch',
     'python-coveralls',
 ]
 

@@ -30,22 +30,23 @@ class CeasefireDocumentResourceTest(BaseWebTest):
         self.app.authorization = ('Basic', ('broker5', ''))
 
     def test_post_ok(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
+        contract_id = contract.data.id
         contract_before_document_post = get_contract(self, contract_id)
         assert contract_before_document_post.documents == []
 
-        response = post_document(self, contract_id)
+        response = post_document(self, contract)
         assert response.status == '201 Created'
 
         contract_after_document_post = get_contract(self, contract_id)
         assert len(contract_after_document_post.documents) == 1
 
     def test_get_ok(self):
-        contract_id, document_id = prepare_contract_with_document(self)
+        contract, document = prepare_contract_with_document(self)
         response = self.app.get(
             CORE_ENDPOINTS['documents'].format(
-                contract_id=contract_id,
-                document_id=document_id
+                contract_id=contract.data.id,
+                document_id=document.data.id
             )
         )
         assert response.status == '200 OK'
@@ -53,13 +54,16 @@ class CeasefireDocumentResourceTest(BaseWebTest):
     def test_patch_ok(self):
         target_tile = 'trololo'
 
-        contract_id, document_id = prepare_contract_with_document(self)
+        contract, document = prepare_contract_with_document(self)
+        contract_id = contract.data.id
+        document_id = document.data.id
+
         title_before_patch = get_document(self, contract_id, document_id).title
         response = self.app.patch_json(
             CORE_ENDPOINTS['documents'].format(
                 contract_id=contract_id,
                 document_id=document_id
-            ),
+            ) + "?acc_token={}".format(contract.access.token),
             {'data': {'title': target_tile}}
         )
         title_after_patch = response.json['data']['title']
@@ -70,13 +74,15 @@ class CeasefireDocumentResourceTest(BaseWebTest):
     def test_patch_forbidden_field(self):
         new_id = 'abcd' * 8
 
-        contract_id, document_id = prepare_contract_with_document(self)
+        contract, document = prepare_contract_with_document(self)
+        contract_id = contract.data.id
+        document_id = document.data.id
         pre_patch_document_id = get_document(self, contract_id, document_id).id
         self.app.patch_json(
             CORE_ENDPOINTS['documents'].format(
                 contract_id=contract_id,
                 document_id=document_id
-            ),
+            ) + "?acc_token={}".format(contract.access.token),
             {'data': {'id': new_id}}
         )
         document_id = get_document(self, contract_id, document_id).id
@@ -84,19 +90,19 @@ class CeasefireDocumentResourceTest(BaseWebTest):
         assert document_id == pre_patch_document_id, 'id must remain unchanged'
 
     def test_post_with_wrong_user(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
         self.app.authorization = ('Basic', ('petro', ''))
 
-        post_document(self, contract_id, status_code=403)
+        post_document(self, contract, status_code=403)
 
     def test_patch_with_wrong_user(self):
-        contract_id, document_id = prepare_contract_with_document(self)
+        contract, document = prepare_contract_with_document(self)
         self.app.authorization = ('Basic', ('petro', ''))
 
         self.app.patch_json(
             CORE_ENDPOINTS['documents'].format(
-                contract_id=contract_id,
-                document_id=document_id
+                contract_id=contract.data.id,
+                document_id=document.data.id
             ),
             {'data': {'title': 'lalal'}},
             status=403

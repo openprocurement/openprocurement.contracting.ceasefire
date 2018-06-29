@@ -33,19 +33,19 @@ class MilestoneResourceTest(BaseWebTest):
         self.app.authorization = ('Basic', ('broker5', ''))
 
     def test_milestone_post(self):
-        contract_id = create_contract(self)
+        contract = create_contract(self)
         self.app.post_json(
             ENDPOINTS['milestones_collection'].format(
-                contract_id=contract_id
+                contract_id=contract.data.id
             ),
             status=404
         )
 
     def test_milestone_get(self):
-        contract_id, milestones = prepare_milestones(self)
+        contract, milestones = prepare_milestones(self)
         response = self.app.get(
             ENDPOINTS['milestones'].format(
-                contract_id=contract_id,
+                contract_id=contract.data.id,
                 milestone_id=milestones[0]['id']
             )
         )
@@ -54,211 +54,211 @@ class MilestoneResourceTest(BaseWebTest):
             'Financing milestone must be created with status `processing`'
 
     def test_milestone_patch_financing_dateMet(self):
-        contract_id, milestones = prepare_milestones(self)
+        contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
         dateMet_to_set = financing_milestone.dueDate - timedelta(days=5)
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             financing_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_financing_milestone = get_milestone(self, contract_id, financing_milestone.id)
+        patched_financing_milestone = get_milestone(self, contract.data.id, financing_milestone.id)
         assert patched_financing_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_financing_milestone.status == 'met', 'dateMet was not set'
-        approval_milestone = get_milestone(self, contract_id, milestones[1]['id'])
+        approval_milestone = get_milestone(self, contract.data.id, milestones[1]['id'])
         assert approval_milestone.status == 'processing'
         assert approval_milestone.dueDate is not None
-        updated_contract = get_contract(self, contract_id)
+        updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'active.approval', 'Contract status was not updated'
 
     def test_milestone_patch_financing_dateMet_patrially_met(self):
-        contract_id, milestones = prepare_milestones(self)
+        contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
         dateMet_to_set = financing_milestone.dueDate + timedelta(days=5)
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             financing_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_financing_milestone = get_milestone(self, contract_id, financing_milestone.id)
+        patched_financing_milestone = get_milestone(self, contract.data.id, financing_milestone.id)
         assert patched_financing_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_financing_milestone.status == 'partiallyMet', 'dateMet was not set'
-        approval_milestone = get_milestone(self, contract_id, milestones[1]['id'])
+        approval_milestone = get_milestone(self, contract.data.id, milestones[1]['id'])
         assert approval_milestone.status == 'processing'
         assert approval_milestone.dueDate is not None
-        updated_contract = get_contract(self, contract_id)
+        updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'active.approval', 'Contract status was not updated'
 
     def test_milestone_patch_approval_dateMet(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         approval_milestone = Milestone(milestones[1])
         assert approval_milestone.type_ == 'approval'
         dateMet_to_set = approval_milestone.dueDate - timedelta(days=5)
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             approval_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_approval_milestone = get_milestone(self, contract_id, approval_milestone['id'])
+        patched_approval_milestone = get_milestone(self, contract.data.id, approval_milestone['id'])
         assert patched_approval_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_approval_milestone.status == 'met'
-        reporting_milestone = get_milestone(self, contract_id, milestones[2]['id'])
+        reporting_milestone = get_milestone(self, contract.data.id, milestones[2]['id'])
         assert reporting_milestone.status == 'processing', 'Reporting milestone status must be `processing`'
         assert reporting_milestone.dueDate is not None
-        updated_contract = get_contract(self, contract_id)
+        updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'active', 'Contract status was not updated'
 
     def test_milestone_patch_approval_dateMet_partially_met(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         approval_milestone = Milestone(milestones[1])
         assert approval_milestone.type_ == 'approval'
         dateMet_to_set = approval_milestone.dueDate + timedelta(days=5)
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             approval_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_approval_milestone = get_milestone(self, contract_id, approval_milestone['id'])
+        patched_approval_milestone = get_milestone(self, contract.data.id, approval_milestone['id'])
         assert patched_approval_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_approval_milestone.status == 'partiallyMet'
-        reporting_milestone = get_milestone(self, contract_id, milestones[2]['id'])
+        reporting_milestone = get_milestone(self, contract.data.id, milestones[2]['id'])
         assert reporting_milestone.status == 'processing', 'Reporting milestone status must be `processing`'
         assert reporting_milestone.dueDate is not None
-        updated_contract = get_contract(self, contract_id)
+        updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'active', 'Contract status was not updated'
 
     def test_milestone_patch_reporting_dateMet(self):
-        contract_id, milestones = prepare_milestones_reporting(self)
+        contract, milestones = prepare_milestones_reporting(self)
         reporting_milestone = milestones[2]
         assert reporting_milestone.type_ == 'reporting'
         dateMet_to_set = reporting_milestone.dueDate - timedelta(days=5)
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_reporting_milestone = get_milestone(self, contract_id, reporting_milestone['id'])
+        patched_reporting_milestone = get_milestone(self, contract.data.id, reporting_milestone['id'])
         assert patched_reporting_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_reporting_milestone.status == 'met'
-        updated_contract = get_contract(self, contract_id)
+        updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'terminated', 'Contract status was not updated'
 
     def test_milestone_patch_reporting_dateMet_partiallyMet(self):
-        contract_id, milestones = prepare_milestones_reporting(self)
+        contract, milestones = prepare_milestones_reporting(self)
         reporting_milestone = milestones[2]
         assert reporting_milestone.type_ == 'reporting'
         dateMet_to_set = reporting_milestone.dueDate + timedelta(days=5)
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_reporting_milestone = get_milestone(self, contract_id, reporting_milestone['id'])
+        patched_reporting_milestone = get_milestone(self, contract.data.id, reporting_milestone['id'])
         assert patched_reporting_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_reporting_milestone.status == 'partiallyMet'
-        updated_contract = get_contract(self, contract_id)
+        updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'terminated', 'Contract status was not updated'
 
     def test_milestone_patch_reporting_invalid_dateMet(self):
-        contract_id, milestones = prepare_milestones_reporting(self)
+        contract, milestones = prepare_milestones_reporting(self)
         reporting_milestone = milestones[2]
         assert reporting_milestone.type_ == 'reporting'
         dateMet_to_set = reporting_milestone.dueDate - timedelta(days=10000)
 
         patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}},
             status=422
         )
 
     def test_milestone_patch_financing_wrong_dateMet(self):
-        contract_id, milestones = prepare_milestones(self)
+        contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
         dateMet_to_set = financing_milestone.dueDate - timedelta(days=500)
 
         patch_milestone(
             self,
-            contract_id,
+            contract,
             financing_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}},
             status=422
         )
 
     def test_patch_notMet(self):
-        contract_id, milestones = prepare_milestones(self)
+        contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             financing_milestone.id,
             {'data': {'status': 'notMet'}},
         )
 
         self.assertEqual(response.status, '200 OK')
-        related_contract = get_contract(self, contract_id)
+        related_contract = get_contract(self, contract.data.id)
         self.assertEqual(related_contract.status, 'unsuccessful')
 
     def test_patch_status(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         reporting_milestone = Milestone(milestones[2])
         assert reporting_milestone.type_ == 'reporting'
 
         patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone.id,
             {'data': {'status': 'met'}},
         )
-        patched_milestone = get_milestone(self, contract_id, reporting_milestone.id)
+        patched_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         self.assertEqual(patched_milestone.status, 'scheduled')
 
     def test_patch_description(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         reporting_milestone = Milestone(milestones[2])
         assert reporting_milestone.type_ == 'reporting'
 
         patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone.id,
             {'data': {'description': '937-99-92'}},
         )
-        patched_milestone = get_milestone(self, contract_id, reporting_milestone.id)
+        patched_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         self.assertEqual(patched_milestone.description, '937-99-92')
 
     def test_milestone_patch_reporting_dueDate_when_scheduled(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         approval_milestone = milestones[1]
         assert approval_milestone.type_ == 'approval'
         reporting_milestone = milestones[2]
@@ -266,17 +266,17 @@ class MilestoneResourceTest(BaseWebTest):
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone['id'],
             {'data': {'dueDate': dueDate_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_reporting_milestone = get_milestone(self, contract_id, reporting_milestone['id'])
+        patched_reporting_milestone = get_milestone(self, contract.data.id, reporting_milestone['id'])
         assert patched_reporting_milestone.dueDate == dueDate_to_set, 'dueDate was not patched'
 
     def test_milestone_patch_dateMet_when_it_already_set(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         approval_milestone = milestones[1]
         assert approval_milestone.type_ == 'approval'
         reporting_milestone = milestones[2]
@@ -286,52 +286,52 @@ class MilestoneResourceTest(BaseWebTest):
         # patch dueDate
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone['id'],
             {'data': {'dueDate': dueDate_to_set.isoformat()}}
         )
 
         self.assertEqual(response.status, '200 OK')
-        patched_reporting_milestone = get_milestone(self, contract_id, reporting_milestone['id'])
+        patched_reporting_milestone = get_milestone(self, contract.data.id, reporting_milestone['id'])
         assert patched_reporting_milestone.dueDate == dueDate_to_set, 'dueDate was not patched'
 
         response = patch_milestone(
             self,
-            contract_id,
+            contract,
             approval_milestone['id'],
             {'data': {'dateMet': approval_dateMet.isoformat()}}
         )
 
-        reporting_milestone = get_milestone(self, contract_id, reporting_milestone.id)
+        reporting_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         assert reporting_milestone.dueDate == dueDate_to_set, 'dueDate must not be changed'
 
     def test_update_dateModified(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         reporting_milestone = Milestone(milestones[2])
         assert reporting_milestone.type_ == 'reporting'
         old_dateModified = reporting_milestone.dateModified
 
         patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone['id'],
             {'data': {'description': '937-99-92'}},
         )
-        patched_milestone = get_milestone(self, contract_id, reporting_milestone.id)
+        patched_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         assert old_dateModified != patched_milestone.dateModified, 'dateModified must be updated'
 
     def test_update_dateModified_forbidden(self):
-        contract_id, milestones = prepare_milestones_approval(self)
+        contract, milestones = prepare_milestones_approval(self)
         reporting_milestone = Milestone(milestones[2])
         assert reporting_milestone.type_ == 'reporting'
         old_dateModified = reporting_milestone.dateModified
 
         patch_milestone(
             self,
-            contract_id,
+            contract,
             reporting_milestone.id,
             {'data': {'type_': '937-99-92'}},
             status=422
         )
-        patched_milestone = get_milestone(self, contract_id, reporting_milestone.id)
+        patched_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         assert old_dateModified == patched_milestone.dateModified, 'dateModified must not be updated'

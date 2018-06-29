@@ -38,18 +38,18 @@ def get_milestone(test_case, contract_id, milestone_id):
     return Milestone(response.json['data'])
 
 
-def patch_milestone(test_case, contract_id, milestone_id, data, status=200):
+def patch_milestone(test_case, contract, milestone_id, data, status=200):
     return test_case.app.patch_json(
         ENDPOINTS['milestones'].format(
-            contract_id=contract_id,
+            contract_id=contract.data.id,
             milestone_id=milestone_id,
-        ),
+        ) + "?acc_token={}".format(contract.access.token),
         data,
         status=status,
     )
 
 
-def post_document(test_case, contract_id, **kwargs):
+def post_document(test_case, contract, **kwargs):
     data = {}
     if not kwargs.get('data'):
         data = deepcopy(test_document_data)
@@ -65,8 +65,8 @@ def post_document(test_case, contract_id, **kwargs):
         target_status = kwargs['status_code']
 
     url = CORE_ENDPOINTS['documents_collection'].format(
-        contract_id=contract_id
-    )
+        contract_id=contract.data.id
+    ) + "?acc_token={}".format(contract.access.token)
 
     response = test_case.app.post_json(url, {'data': data}, status=target_status)
     return response
