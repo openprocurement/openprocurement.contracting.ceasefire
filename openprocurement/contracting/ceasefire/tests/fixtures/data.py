@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
+from copy import deepcopy
 
 from openprocurement.auctions.core.tests.base import (
     test_organization,
     test_procuringEntity,
 )
 
+
+swiftsure_procuring_entity = deepcopy(test_procuringEntity)
+swiftsure_procuring_entity.update({
+    "additionalContactPoints": [
+        {
+            "name": u"Державне управління справами",
+            "telephone": u"0440000000"
+        }
+    ]
+})
 
 contract_create_data = {
     'awardID': '376d560b2b2d452a80543865f3cab43e',
@@ -18,7 +29,7 @@ contract_create_data = {
     },
     'auction_token': '21c5ba429b1a434ea1bfa5f70a0f5885',
     'auction_id': '0b7bca6feeb644e987ded0429f1ec167',
-    'procuringEntity': test_procuringEntity,
+    'procuringEntity': swiftsure_procuring_entity,
     'title': 'Test Contract',
     'suppliers': [test_organization],
     "items": [
