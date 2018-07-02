@@ -16,3 +16,15 @@ def search_list_with_dicts(container, key, value):
         found_value = item.get(key, False)
         if found_value and found_value == value:
             return item
+
+
+def view_milestones_by_type(milestones):
+    """Returns dict of milestones, where key is the type of milestone
+
+    Use this tool to not fetch milestone only by it's index.
+    """
+    result = {}
+    for milestone in milestones:
+        result[milestone.type_] = milestone
+
+    return result

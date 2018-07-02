@@ -10,11 +10,13 @@ ENDPOINTS = {
 }
 # Model constants
 ## Contract
-CONTRACT_STATUSES = (  # ORDER MATTERS -- ПОРЯДОК СТАТУСІВ ВАЖЛИВИЙ
+CONTRACT_STATUSES = (
     'active.confirmation',
     'active.payment',
     'active.approval',
     'active',
+    'pending.terminated',
+    'pending.unsuccessful',
     'terminated',
     'unsuccessful',
 )
