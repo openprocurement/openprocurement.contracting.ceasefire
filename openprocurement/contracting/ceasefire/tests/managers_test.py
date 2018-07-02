@@ -204,3 +204,42 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
         dateMet_to_set = mocked_milestone.dueDate + timedelta(days=2)
         manager.choose_status(mocked_milestone, dateMet_to_set)
         assert mocked_milestone.status == 'partiallyMet', 'Milestone status was not choosed correctly'
+
+
+class SetContractStatusTest(unittest.TestCase):
+
+    def setUp(self):
+        self.manager = CeasefireMilestoneManager(Mock())
+        self.contract = Mock()
+
+        financing_milestone = Mock()
+        financing_milestone.type_ = 'financing'
+
+        approval_milestone = Mock()
+        approval_milestone.type_ = 'approval'
+
+        reporting_milestone = Mock()
+        reporting_milestone.type_ = 'reporting'
+
+        self.contract.milestones = [financing_milestone, approval_milestone, reporting_milestone]
+
+    def test_set_by_parameters_table(self):
+        statuses_table = (
+            (('met', 'processing', 'scheduled'), 'active.approval'),
+            (('partiallyMet', 'processing', 'scheduled'), 'active.approval'),
+            (('met', 'met', 'processing'), 'active'),
+            (('met', 'partiallyMet', 'processing'), 'active'),
+            (('met', 'partiallyMet', 'met'), 'pending.terminated'),
+            (('met', 'partiallyMet', 'notMet'), 'pending.unsuccessful'),
+            (('notMet', 'partiallyMet', 'met'), 'pending.unsuccessful'),
+        )
+        for row in statuses_table:
+            input_statuses = row[0]
+            target_contract_status = row[1]
+
+            # init milestone statuses
+            for i, milestone in enumerate(self.contract.milestones):
+                milestone.status = input_statuses[i]
+
+            self.manager.contract_status_based_on_milestones(self.contract)
+            assert self.contract.status == target_contract_status

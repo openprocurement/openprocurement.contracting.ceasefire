@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-
 from datetime import timedelta
 from openprocurement.contracting.ceasefire.tests.base import (
     BaseWebTest
@@ -163,7 +161,7 @@ class MilestoneResourceTest(BaseWebTest):
         assert patched_reporting_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_reporting_milestone.status == 'met'
         updated_contract = get_contract(self, contract.data.id)
-        assert updated_contract.status == 'terminated', 'Contract status was not updated'
+        assert updated_contract.status == 'pending.terminated', 'Contract status was not updated'
 
     def test_milestone_patch_reporting_dateMet_partiallyMet(self):
         contract, milestones = prepare_milestones_reporting(self)
@@ -183,7 +181,7 @@ class MilestoneResourceTest(BaseWebTest):
         assert patched_reporting_milestone.dateMet == dateMet_to_set, 'dateMet was not set'
         assert patched_reporting_milestone.status == 'partiallyMet'
         updated_contract = get_contract(self, contract.data.id)
-        assert updated_contract.status == 'terminated', 'Contract status was not updated'
+        assert updated_contract.status == 'pending.terminated', 'Contract status was not updated'
 
     def test_milestone_patch_reporting_invalid_dateMet(self):
         contract, milestones = prepare_milestones_reporting(self)

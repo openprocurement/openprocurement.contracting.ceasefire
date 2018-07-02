@@ -9,10 +9,12 @@ from openprocurement.auctions.core.utils import calculate_business_date
 from openprocurement.contracting.core.interfaces import (
     IMilestoneManager,
 )
-from openprocurement.contracting.ceasefire.utils import search_list_with_dicts
+from openprocurement.contracting.ceasefire.utils import (
+    search_list_with_dicts,
+    view_milestones_by_type,
+)
 from openprocurement.contracting.ceasefire.models import Milestone
 from openprocurement.contracting.ceasefire.constants import (
-    CONTRACT_STATUSES,
     MILESTONE_APPROVAL_DUEDATE_OFFSET,
     MILESTONE_FINANCING_DUEDATE_OFFSET,
     MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS,
@@ -62,9 +64,9 @@ class CeasefireMilestoneManager(object):
             if next_milestone:
                 next_milestone.status = 'processing'
                 self.set_dueDate(next_milestone, contract)
-                self.increment_contract_status(contract)
+                self.contract_status_based_on_milestones(contract)
             else:
-                self.increment_contract_status(contract)
+                self.contract_status_based_on_milestones(contract)
 
     def set_dueDate(self, milestone, contract):
         """Sets dueDate of the Milestone
@@ -154,9 +156,37 @@ class CeasefireMilestoneManager(object):
             )
             return previous_milestone
 
-    def increment_contract_status(self, contract):
-        current_status_index = CONTRACT_STATUSES.index(contract.status)
-        contract.status = CONTRACT_STATUSES[current_status_index + 1]
+    def contract_status_based_on_milestones(self, contract):
+        """Sets status of related contract based on it's milestones statuses"""
+        milestones = view_milestones_by_type(contract.milestones)
+        statuses = (
+            milestones['financing'].status,
+            milestones['approval'].status,
+            milestones['reporting'].status
+        )
+        successful_statuses = ('met', 'partiallyMet')
+
+        if 'notMet' in statuses:
+            contract.status = 'pending.unsuccessful'
+
+        if (
+            statuses[0] in successful_statuses and
+            statuses[1] == 'processing' and
+            statuses[2] == 'scheduled'
+        ):
+            contract.status = 'active.approval'
+        elif (
+            statuses[0] in successful_statuses and
+            statuses[1] in successful_statuses and
+            statuses[2] == 'processing'
+        ):
+            contract.status = 'active'
+        elif (
+            statuses[0] in successful_statuses and
+            statuses[1] in successful_statuses and
+            statuses[2] in successful_statuses
+        ):
+            contract.status = 'pending.terminated'
 
     def validate_dateMet(self, request, dateMet):
         previous_milestone = self.get_previous_milestone(request.context)
