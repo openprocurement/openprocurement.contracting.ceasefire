@@ -56,6 +56,7 @@ def post_document(test_case, contract, **kwargs):
         data.update({
             'url': test_case.generate_docservice_url(),
             'documentOf': 'lot',
+            'relatedItem': '01' * 16
         })
     else:
         data.update(kwargs['data'])

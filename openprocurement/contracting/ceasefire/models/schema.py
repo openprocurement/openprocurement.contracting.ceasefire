@@ -9,11 +9,13 @@ from schematics.types.compound import (
 from openprocurement.api.constants import (
     SANDBOX_MODE,
 )
+from openprocurement.api.validation import validate_items_uniq
 from openprocurement.api.models.common import (
     Period,
 )
 from openprocurement.auctions.core.models import (
     dgfOrganization,
+    SwiftsureItem,
 )
 from openprocurement.api.models.schematics_extender import (
     IsoDateTimeType,
@@ -69,6 +71,7 @@ class Contract(BaseContract):
         roles = CONTRACT_ROLES
 
     awardID = StringType(required=True)  # overridden to make required
+    items = ListType(ModelType(SwiftsureItem), required=False, min_size=1, validators=[validate_items_uniq])
     suppliers = ListType(ModelType(dgfOrganization), required=True)
     contractID = StringType(required=True)  # overridden to make required
     dateSigned = IsoDateTimeType(required=True)  # overridden to make required
