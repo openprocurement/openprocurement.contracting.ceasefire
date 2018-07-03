@@ -6,6 +6,7 @@ CONTRACT_FIELDS_TO_HIDE = (
     '_rev',
     'auction_token',
     'doc_type',
-    'ovner_token',
+    'owner_token',
+    'transfer_token',
     'revisions',
 )

@@ -27,8 +27,6 @@ contract_create_data = {
         'startDate': datetime.now().isoformat(),
         'endDate': (datetime.now() + timedelta(days=30)).isoformat(),
     },
-    'auction_token': '21c5ba429b1a434ea1bfa5f70a0f5885',
-    'auction_id': '0b7bca6feeb644e987ded0429f1ec167',
     'procuringEntity': swiftsure_procuring_entity,
     'title': 'Test Contract',
     'suppliers': [test_organization],
