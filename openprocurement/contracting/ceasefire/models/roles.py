@@ -68,6 +68,10 @@ CONTRACT_ROLES = {
     'edit_active':
         contract_edit_role +
         blacklist('suppliers', 'milestones'),
+    'edit_pending.terminated':
+        whitelist(),
+    'edit_pending.unsuccessful':
+        whitelist(),
     'edit_terminated':
         whitelist(),
     'edit_unsuccessful':
