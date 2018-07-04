@@ -167,6 +167,7 @@ class CeasefireMilestoneManager(object):
             milestones['approval'].status,
             milestones['reporting'].status
         )
+        contract_status = contract.status
         successful_statuses = ('met', 'partiallyMet')
 
         if 'notMet' in statuses:

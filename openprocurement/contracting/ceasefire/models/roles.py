@@ -30,7 +30,11 @@ MILESTONE_ROLES = {
 CONTRACT_ROLES = {
     'create':
         contract_create_role +
-        whitelist('contractType', 'suppliers'),
+        whitelist(
+            'contractType',
+            'suppliers',
+            'merchandisingObject',
+        ),
     'view':
         whitelist(
             'awardID',
@@ -45,7 +49,7 @@ CONTRACT_ROLES = {
             'documents',
             'id',
             'items',
-            'merchandisingobject',
+            'merchandisingObject',
             'milestones',
             'milestones',
             'period',
