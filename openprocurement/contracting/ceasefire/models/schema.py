@@ -81,7 +81,7 @@ class Contract(BaseContract):
     procuringEntity = ModelType(SwiftsureProcuringEntity)  # overridden to make not required
     status = StringType(choices=constants.CONTRACT_STATUSES, default=constants.DEFAULT_CONTRACT_STATUS)
     type_ = StringType(serialized_name='type')
-    merchandisingObject = StringType()  # id of related lot
+    merchandisingObject = StringType(required=True)  # id of related lot
 
     create_accreditation = 5
     edit_accreditation = 6

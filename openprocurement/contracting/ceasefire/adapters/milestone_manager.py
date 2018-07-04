@@ -6,6 +6,9 @@ from zope.interface import implementer
 
 from openprocurement.api.utils import error_handler
 from openprocurement.auctions.core.utils import calculate_business_date
+from openprocurement.contracting.core.utils import (
+    LOGGER,
+)
 from openprocurement.contracting.core.interfaces import (
     IMilestoneManager,
 )
@@ -164,29 +167,38 @@ class CeasefireMilestoneManager(object):
             milestones['approval'].status,
             milestones['reporting'].status
         )
+        contract_status = contract.status
         successful_statuses = ('met', 'partiallyMet')
 
         if 'notMet' in statuses:
-            contract.status = 'pending.unsuccessful'
+            contract_status = 'pending.unsuccessful'
 
         if (
             statuses[0] in successful_statuses and
             statuses[1] == 'processing' and
             statuses[2] == 'scheduled'
         ):
-            contract.status = 'active.approval'
+            contract_status = 'active.approval'
         elif (
             statuses[0] in successful_statuses and
             statuses[1] in successful_statuses and
             statuses[2] == 'processing'
         ):
-            contract.status = 'active'
+            contract_status = 'active'
         elif (
             statuses[0] in successful_statuses and
             statuses[1] in successful_statuses and
             statuses[2] in successful_statuses
         ):
-            contract.status = 'pending.terminated'
+            contract_status = 'pending.terminated'
+
+        contract.status = contract_status
+        LOGGER.info(
+            "Evaluated and updated ceasefire contract status from it's milestones. Status: {0}, id: {1}".format(
+                contract_status,
+                contract.id
+            )
+        )
 
     def validate_dateMet(self, request, dateMet):
         previous_milestone = self.get_previous_milestone(request.context)

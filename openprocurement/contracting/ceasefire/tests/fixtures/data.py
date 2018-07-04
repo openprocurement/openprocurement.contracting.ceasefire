@@ -23,6 +23,7 @@ contract_create_data = {
     'contractID': 'a930574bf8cd405cb7f9c9ed4ca68061',
     'contractType': 'ceasefire',
     'dateSigned': datetime.now().isoformat(),
+    'merchandisingObject': 'a930574bf8cd999cb7f9c9ed4ca68061',
     'period': {
         'startDate': datetime.now().isoformat(),
         'endDate': (datetime.now() + timedelta(days=30)).isoformat(),
