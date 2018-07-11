@@ -1,0 +1,16 @@
+GET /api/2.5/contracts HTTP/1.0
+Authorization: Basic YnJva2VyOg==
+Host: lb.api-sandbox.registry.ea.openprocurement.net
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "next_page": {
+    "path": "/api/2.5/contracts?offset=", 
+    "uri": "http://lb.api-sandbox.registry.ea.openprocurement.net/api/2.5/contracts?offset=", 
+    "offset": ""
+  }, 
+  "data": []
+}
+

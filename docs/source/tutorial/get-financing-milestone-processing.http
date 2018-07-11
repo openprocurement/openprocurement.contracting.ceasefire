@@ -1,0 +1,16 @@
+GET /api/2.5/contracts/dda226649ee64264aded84f41f7f7a13/milestones/f4a8d4e93c68484d999dea2648f69fba HTTP/1.0
+Authorization: Basic YnJva2VyOg==
+Host: lb.api-sandbox.registry.ea.openprocurement.net
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "processing", 
+    "type": "financing", 
+    "id": "f4a8d4e93c68484d999dea2648f69fba", 
+    "dueDate": "2018-10-08T18:00:00+03:00"
+  }
+}
+

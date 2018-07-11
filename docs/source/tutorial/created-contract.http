@@ -1,0 +1,83 @@
+GET /api/2.5/contracts/08edeb5a34f3463aae55c1b9780be761 HTTP/1.0
+Authorization: Basic YnJva2VyOg==
+Host: lb.api-sandbox.registry.ea.openprocurement.net
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "active.confirmation", 
+    "merchandisingObject": "a930574bf8cd999cb7f9c9ed4ca68061", 
+    "title": "Test Contract", 
+    "items": [
+      {
+        "registrationDetails": {
+          "status": "unknown"
+        }, 
+        "description": "Земля для військовослужбовців", 
+        "classification": {
+          "scheme": "CPV", 
+          "description": "Земельні ділянки", 
+          "id": "66113000-5"
+        }, 
+        "additionalClassifications": [
+          {
+            "scheme": "CAV", 
+            "id": "39513200-3", 
+            "description": "папір і картон гофровані, паперова й картонна тара"
+          }
+        ], 
+        "address": {
+          "postalCode": "79000", 
+          "countryName": "Україна", 
+          "streetAddress": "вул. Банкова 1", 
+          "region": "м. Київ", 
+          "locality": "м. Київ"
+        }, 
+        "id": "6cb841dc37984ad7860d93d9bf8488e6", 
+        "unit": {
+          "code": "44617100-9", 
+          "name": "item"
+        }, 
+        "quantity": 5
+      }
+    ], 
+    "period": {
+      "startDate": "2018-07-12T14:02:50.678865+03:00", 
+      "endDate": "2018-08-11T14:02:50.678870+03:00"
+    }, 
+    "dateSigned": "2018-07-12T14:02:50.678838+03:00", 
+    "procuringEntity": {
+      "contactPoint": {
+        "name": "Державне управління справами", 
+        "telephone": "0440000000"
+      }, 
+      "identifier": {
+        "scheme": "UA-EDR", 
+        "id": "00037256", 
+        "uri": "http://www.dus.gov.ua/"
+      }, 
+      "name": "Державне управління справами", 
+      "address": {
+        "postalCode": "01220", 
+        "countryName": "Україна", 
+        "streetAddress": "вул. Банкова, 11, корпус 1", 
+        "region": "м. Київ", 
+        "locality": "м. Київ"
+      }, 
+      "additionalContactPoints": [
+        {
+          "name": "Державне управління справами", 
+          "telephone": "0440000000"
+        }
+      ]
+    }, 
+    "owner": "contracting", 
+    "contractType": "ceasefire", 
+    "awardID": "376d560b2b2d452a80543865f3cab43e", 
+    "id": "08edeb5a34f3463aae55c1b9780be761", 
+    "contractID": "a930574bf8cd405cb7f9c9ed4ca68061"
+  }
+}
+
