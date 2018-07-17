@@ -52,7 +52,6 @@ CONTRACT_ROLES = {
             'merchandisingObject',
             'milestones',
             'milestones',
-            'period',
             'procuringEntity',
             'status',
             'title',

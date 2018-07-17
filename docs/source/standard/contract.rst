@@ -25,6 +25,9 @@ Schema
 :contractID:
     string, auto-generated, read-only
 
+    |ocdsDescription|
+    ID of the same contract, bound to auction resource.
+
 :contractNumber:
     string
 
@@ -48,17 +51,18 @@ Schema
 
     Possible values are:
 
+    * `active.confirmation` - ???
+    * `active.payment` - ???
+    * `active.approval` - ???
     * `active` - this contract has been signed by all the parties, and is
       now legally in force.
+    * `active` - ???
+    * `pending.terminated` - ???
+    * `pending.unsuccessful` - ???
     * `terminated` - this contract was signed and in force, and has now come
       to a close.  This may be due to a successful completion of the contract,
       or may be early termination due to some non-completion issue.
-
-:period:
-    :ref:`Period`
-
-    |ocdsDescription|
-    The start and end date for the contract.
+    * `unsuccessful` - ???
 
 :items:
     List of :ref:`Item` objects, auto-generated, read-only
@@ -103,22 +107,3 @@ Schema
     :valueAddedTaxIncluded: bool, required , auto-generated
 
     Amount of money actually paid.
-
-:terminationDetails:
-    string, required for unsuccessful contract
-
-    Reasons for contract termination. Presence of this field indicates that contract is unsuccessful.
-
-
-Workflow
---------
-
-.. graphviz::
-
-    digraph G {
-        A [ label="active*" ]
-        B [ label="terminated"]
-         A -> B;
-    }
-
-\* marks initial state
