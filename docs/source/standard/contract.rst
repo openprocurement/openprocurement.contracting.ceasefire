@@ -122,3 +122,13 @@ Schema
 
 :owner:
     UserID of user, that owns this contract.
+
+:dateModified:
+    string, :ref:`date`, auto-generated
+
+    Time, when contract was changed last time.
+
+:contractType:
+    string
+
+    Type of the contract.

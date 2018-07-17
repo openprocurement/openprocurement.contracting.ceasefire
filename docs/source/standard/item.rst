@@ -55,11 +55,6 @@ Schema
     |ocdsDescription|
     The number of units required
 
-:deliveryDate:
-    :ref:`Period`, required
-
-    Period during which the item should be delivered.
-
 :deliveryAddress:
     :ref:`Address`, required
 
@@ -83,6 +78,12 @@ Schema
     string
 
     Id of related :ref:`lot`.
+
+:registrationDetails:
+    List of :ref: `RegistrationDetails`
+
+:address:
+    :ref: `Address`
 
 
 .. _Classification:
