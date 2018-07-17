@@ -2,7 +2,6 @@
 from schematics.transforms import whitelist, blacklist
 from openprocurement.contracting.core.models import (
     contract_create_role,
-    contract_view_role,
     contract_edit_role,
 )
 

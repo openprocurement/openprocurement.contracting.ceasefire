@@ -107,3 +107,18 @@ Schema
     :valueAddedTaxIncluded: bool, required , auto-generated
 
     Amount of money actually paid.
+
+:merchandisingObject:
+    Id of related :ref:`Lot`
+
+:milestones:
+    List of :ref:`Milestone` objects.
+
+    There are 3 milestones, that will be associated with contract after acquiring him `active.payment` status:
+
+    * `financing`
+    * `approval`
+    * `reporting`
+
+:owner:
+    UserID of user, that owns this contract.
