@@ -1,4 +1,7 @@
-from openprocurement.contracting.core.tests.base import BaseWebTest as CoreBaseWebTest, BaseContractWebTest as CoreBaseContractWebTest
+from openprocurement.contracting.core.tests.base import (
+    BaseWebTest as CoreBaseWebTest,
+    BaseContractWebTest as CoreBaseContractWebTest,
+)
 
 from os import path
 from openprocurement.contracting.core.tests.base import (
@@ -12,6 +15,7 @@ MOCK_CONFIG = connection_mock_config(PARTIAL_MOCK_CONFIG,
                                      base=BASE_MOCK_CONFIG,
                                      connector=('plugins', 'api', 'plugins',
                                                 'contracting.core', 'plugins'))
+
 
 class BaseWebTest(CoreBaseWebTest):
 

@@ -3,6 +3,7 @@ import unittest
 
 from datetime import datetime, timedelta, date
 from mock import (
+    MagicMock,
     Mock,
 )
 from openprocurement.api.constants import (
@@ -212,14 +213,14 @@ class SetContractStatusTest(unittest.TestCase):
         self.manager = CeasefireMilestoneManager(Mock())
         self.contract = Mock()
 
-        financing_milestone = Mock()
-        financing_milestone.type_ = 'financing'
+        financing_milestone = MagicMock()
+        financing_milestone.type_ = financing_milestone.__getitem__.return_value = 'financing'
 
-        approval_milestone = Mock()
-        approval_milestone.type_ = 'approval'
+        approval_milestone = MagicMock()
+        approval_milestone.type_ = approval_milestone.__getitem__.return_value = 'approval'
 
-        reporting_milestone = Mock()
-        reporting_milestone.type_ = 'reporting'
+        reporting_milestone = MagicMock()
+        reporting_milestone.type_ = reporting_milestone.__getitem__.return_value = 'reporting'
 
         self.contract.milestones = [financing_milestone, approval_milestone, reporting_milestone]
 

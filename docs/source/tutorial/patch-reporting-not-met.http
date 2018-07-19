@@ -1,0 +1,26 @@
+PATCH /api/2.5/contracts/93ef67ff2daf487799d5758316d2e28e/milestones/f49acbe82c4743caa567f8b52691739b?acc_token=3c9e52a7b0994904b2fa8e55e4899af3 HTTP/1.0
+Authorization: Basic YnJva2VyOg==
+Content-Length: 30
+Content-Type: application/json
+Host: lb.api-sandbox.registry.ea.openprocurement.net
+DATA:
+{
+  "data": {
+    "status": "notMet"
+  }
+}
+
+Response: 200 OK
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+{
+  "data": {
+    "status": "met", 
+    "dateModified": "2018-07-13T14:20:02.048012+03:00", 
+    "id": "f49acbe82c4743caa567f8b52691739b", 
+    "dateMet": "2022-02-17T18:00:00+03:00", 
+    "type": "reporting", 
+    "dueDate": "2022-02-19T18:00:00+03:00"
+  }
+}
+

@@ -2,7 +2,6 @@
 from schematics.transforms import whitelist, blacklist
 from openprocurement.contracting.core.models import (
     contract_create_role,
-    contract_view_role,
     contract_edit_role,
 )
 
@@ -52,7 +51,6 @@ CONTRACT_ROLES = {
             'merchandisingObject',
             'milestones',
             'milestones',
-            'period',
             'procuringEntity',
             'status',
             'title',
@@ -73,9 +71,9 @@ CONTRACT_ROLES = {
         contract_edit_role +
         blacklist('suppliers', 'milestones'),
     'edit_pending.terminated':
-        whitelist(),
+        whitelist('status'),
     'edit_pending.unsuccessful':
-        whitelist(),
+        whitelist('status'),
     'edit_terminated':
         whitelist(),
     'edit_unsuccessful':

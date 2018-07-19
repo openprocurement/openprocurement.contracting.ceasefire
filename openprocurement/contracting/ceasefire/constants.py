@@ -6,7 +6,9 @@ ENDPOINTS = {
     'contracts_collection': 'contracts',
     'milestones': 'contracts/{contract_id}/milestones/{milestone_id}',
     'milestones_collection': 'contracts/{contract_id}/milestones',
-    'transfers_collection': 'transfers'
+    'transfers_collection': 'transfers',
+    'contracts_documents': 'contracts/{contract_id}/documents/{document_id}',
+    'contracts_documents_collection': 'contracts/{contract_id}/documents',
 }
 # Model constants
 ## Contract
