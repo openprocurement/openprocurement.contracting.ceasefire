@@ -88,3 +88,14 @@ class Contract(BaseContract):
     _internal_type = 'ceasefire'
     if SANDBOX_MODE:
         sandbox_parameters = StringType()
+
+    def get_role(self):
+        root = self.__parent__
+        request = root.request
+        if request.authenticated_role == 'Administrator':
+            role = 'Administrator'
+        elif request.authenticated_role == 'caravan':
+            role = 'caravan'
+        else:
+            role = 'edit_{}'.format(request.context.status)
+        return role
