@@ -20,6 +20,19 @@ CONTRACT_STATUSES = (
     'terminated',
     'unsuccessful',
 )
+CONTRACT_TERMINAL_STATUSES = (
+    'terminated',
+    'unsuccessful',
+)
+CONTRACT_PRE_TERMINAL_STATUSES = (
+    'pending.terminated',
+    'pending.unsuccessful',
+)
+
+# Roles, allowed to change contract status to terminal
+CONTRACT_ALLOW_TERMINAL_STATUS_SET_USERIDS = (
+    'caravan',
+)
 DEFAULT_CONTRACT_STATUS = 'active.confirmation'
 CONTRACT_DEFAULT_TYPE = 'ceasefire'
 ## Milestone

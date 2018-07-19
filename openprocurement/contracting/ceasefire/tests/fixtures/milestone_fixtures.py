@@ -14,6 +14,9 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
 from openprocurement.contracting.ceasefire.models import (
     Milestone,
 )
+from openprocurement.contracting.ceasefire.utils import (
+    search_list_with_dicts,
+)
 
 
 def prepare_milestones(test_case, contract_data=None):
@@ -67,6 +70,29 @@ def prepare_milestones_reporting(test_case, contract_data=None):
         ) + "?acc_token={}".format(contract.access.token),
         {'data': {'dateMet': dateMet_to_set.isoformat()}}
     )
+    test_case.assertEqual(response.status, '200 OK')
+    resp = get_contract(test_case, contract.data.id)
+    contract.data.update(resp)
+    return (contract, contract.data.milestones)
+
+
+def prepare_milestones_all_met(test_case, contract_data=None):
+    """Prepares contract's milestones to make approval milestone have processing status
+    """
+    contract, milestones = prepare_milestones_reporting(test_case, contract_data)
+    reporting_milestone = search_list_with_dicts(milestones, 'type_', 'reporting')
+    dateMet_to_set = reporting_milestone.dueDate - timedelta(days=5)
+
+    assert reporting_milestone.type_ == 'reporting'
+
+    response = test_case.app.patch_json(
+        ENDPOINTS['milestones'].format(
+            contract_id=contract.data.id,
+            milestone_id=reporting_milestone['id'],
+        ) + "?acc_token={}".format(contract.access.token),
+        {'data': {'dateMet': dateMet_to_set.isoformat()}}
+    )
+
     test_case.assertEqual(response.status, '200 OK')
     resp = get_contract(test_case, contract.data.id)
     contract.data.update(resp)

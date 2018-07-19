@@ -22,11 +22,17 @@ from .fixtures.data import contract_create_data
 from .fixtures.contract_fixtures import (
     create_contract,
 )
+from openprocurement.contracting.ceasefire.tests.helpers import (
+    get_contract,
+)
 from openprocurement.contracting.ceasefire.models import (
     Contract,
 )
 from openprocurement.contracting.ceasefire.tests.constants import (
     CONTRACT_FIELDS_TO_HIDE,
+)
+from openprocurement.contracting.ceasefire.tests.fixtures.milestone_fixtures import (
+    prepare_milestones_all_met,
 )
 
 
@@ -168,6 +174,16 @@ class ContractResourceTest(BaseWebTest):
             {'data': {'status': 'active.approval'}},
             status=403
         )
+
+    def test_set_terminal_status_with_allowed_role(self):
+        contract, _ = prepare_milestones_all_met(self)
+        self.app.authorization = ('Basic', ('caravan', ''))
+        self.app.patch_json(
+            ENDPOINTS['contracts'].format(contract_id=contract.data.id),
+            {'data': {'status': 'terminated'}},
+        )
+        terminated_contract = get_contract(self, contract.data.id)
+        self.assertEqual(terminated_contract.status, 'terminated')
 
     def test_create_contract_with_insufficient_acceditation(self):
         self.app.authorization = ('Basic', ('broker2', ''))

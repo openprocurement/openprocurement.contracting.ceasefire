@@ -80,4 +80,6 @@ CONTRACT_ROLES = {
         whitelist(),
     'edit_unsuccessful':
         whitelist(),
+    'caravan':
+        whitelist('status'),
 }
