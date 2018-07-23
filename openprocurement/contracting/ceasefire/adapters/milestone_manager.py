@@ -43,7 +43,7 @@ class CeasefireMilestoneManager(object):
         # `notMet` handling
         if new_status == 'notMet' and milestone.status == 'processing':
             milestone.status = new_status
-            milestone.__parent__.status = 'unsuccessful'
+            milestone.__parent__.status = 'pending.unsuccessful'
 
         # handle patching `dueDate` of reporting milestone in `scheduled` status
         patched_dueDate = request.json.get('data', {}).get('dueDate')

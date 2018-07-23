@@ -225,7 +225,7 @@ class MilestoneResourceTest(BaseWebTest):
 
         self.assertEqual(response.status, '200 OK')
         related_contract = get_contract(self, contract.data.id)
-        self.assertEqual(related_contract.status, 'unsuccessful')
+        self.assertEqual(related_contract.status, 'pending.unsuccessful')
 
     def test_patch_status(self):
         contract, milestones = prepare_milestones_approval(self)

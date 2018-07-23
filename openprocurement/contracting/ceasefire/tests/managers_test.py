@@ -186,7 +186,7 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
         manager.change_milestone(mocked_request)
 
         self.assertEqual(mocked_milestone.status, 'notMet')
-        self.assertEqual(mocked_contract.status, 'unsuccessful')
+        self.assertEqual(mocked_contract.status, 'pending.unsuccessful')
 
     def test_choose_status_to_met(self):
         manager = CeasefireMilestoneManager(Mock())
