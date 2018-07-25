@@ -44,6 +44,7 @@ CONTRACT_ROLES = {
             'contractNumber',
             'contractType',
             'dateSigned',
+            'dateModified',
             'description',
             'documents',
             'id',
