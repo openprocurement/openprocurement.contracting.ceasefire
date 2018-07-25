@@ -103,9 +103,11 @@ class ContractResourceTest(BaseWebTest):
             ENDPOINTS['contracts'].format(
                 contract_id=contract_id))
         assert response.status == '200 OK'
-        assert '_internal_type' not in response.json['data'].keys()
-        assert 'period' not in response.json['data'].keys()
-        assert 'terminationDetails' not in response.json['data'].keys()
+        response_data_keys = response.json['data'].keys()
+        assert '_internal_type' not in response_data_keys
+        assert 'period' not in response_data_keys
+        assert 'terminationDetails' not in response_data_keys
+        assert 'dateModified' in response_data_keys
 
     def test_get_contracts(self):
         # This test relies on delayed indexation after 1st GET request to the DB,
