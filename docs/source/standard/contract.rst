@@ -2,6 +2,7 @@
 .. include:: defs.hrst
 
 .. index:: Contract
+
 .. _Contract:
 
 Contract
@@ -11,13 +12,12 @@ Schema
 ------
 
 :id:
-    uid, auto-generated
+    uuid, auto-generated, read-only
 
-    |ocdsDescription|
-    The identifier for this contract.
+    Internal identifier for this contract.
 
 :awardID:
-    string, required
+    string, required, read-only
 
     |ocdsDescription|
     The `Award.id` against which this contract is being issued.
@@ -29,19 +29,33 @@ Schema
     ID of the same contract, bound to auction resource.
 
 :contractNumber:
-    string
+    string, optional
+
+    Contract number within the paper documentation.
 
 :title:
-    string, required
+    string, multilingual, optional
+    
+    * Ukrainian by default - Ukrainian title
+
+    * ``title_en`` (English) - English title
+
+    * ``title_ru`` (Russian) - Russian title
 
     |ocdsDescription|
-    Contract title
+    Contract title.
 
 :description:
-    string
-
+    string, multilingual, optional
+    
+    * Ukrainian by default - Ukrainian decription
+    
+    * ``decription_en`` (English) - English decription
+    
+    * ``decription_ru`` (Russian) - Russian decription
+    
     |ocdsDescription|
-    Contract description
+    Contract description.
 
 :status:
     string, required
@@ -49,35 +63,46 @@ Schema
     |ocdsDescription|
     The current status of the contract.
 
-    Possible values are:
-
-    * `active.confirmation` - ???
-    * `active.payment` - ???
-    * `active.approval` - ???
-    * `active` - this contract has been signed by all the parties, and is
-      now legally in force.
-    * `active` - ???
-    * `pending.terminated` - ???
-    * `pending.unsuccessful` - ???
-    * `terminated` - this contract was signed and in force, and has now come
-      to a close.  This may be due to a successful completion of the contract,
-      or may be early termination due to some non-completion issue.
-    * `unsuccessful` - ???
++-------------------------+---------------------------------------------------------------------------------+
+|        Status           |                             Description                                         |
++=========================+=================================================================================+
+| :`active.confirmation`: | draft contract                                                                  |
++-------------------------+---------------------------------------------------------------------------------+
+| :`active.payment`:      | payment period                                                                  |
++-------------------------+---------------------------------------------------------------------------------+
+| :`active.approval`:     | the period for downloading the final Order on the privatization of the facility |
++-------------------------+---------------------------------------------------------------------------------+
+| :`active`:              | this contract has been signed by all the parties, and is now legally in force   |
++-------------------------+---------------------------------------------------------------------------------+
+| :`active`:              | period for fulfillment of other conditions                                      |
++-------------------------+---------------------------------------------------------------------------------+
+| :`pending.terminated`:  | a vaiting transition to the next status                                         |
++-------------------------+---------------------------------------------------------------------------------+
+| :`pending.unsuccessful`:| a vaiting transition to the next status                                         |
++-------------------------+---------------------------------------------------------------------------------+
+| :`terminated`:          | this contract was signed and in force, and has now come to a close. This may be |
+|                         | due to a successful completion of the contract or may be early termination      |
+|                         | due to some non-completion issue                                                |
++-------------------------+---------------------------------------------------------------------------------+
+| :`unsuccessful`:        | this contract is unsuccessful                                                   |
++-------------------------+---------------------------------------------------------------------------------+
 
 :items:
-    List of :ref:`Item` objects, auto-generated, read-only
+    Array of :ref:`Item` objects, auto-generated, read-only
 
     |ocdsDescription|
-    The goods, services, and any intangible outcomes in this contract. Note: If the items are the same as the award do not repeat.
+    The goods, services, and any intangible outcomes in this contract.
 
 :procuringEntity:
-   :ref:`ProcuringEntity`
+    :ref:`Organization`, optional
 
-   |ocdsDescription|
-   The entity managing the procurement, which may be different from the buyer who is paying / using the items being procured.
+    |ocdsDescription|
+    The entity managing the procurement, which may be different from the buyer who is paying / using the items being procured.
 
 :suppliers:
     List of :ref:`Organization` objects, auto-generated, read-only
+
+    Buyer. Indicates the winner of the auction whom the given contract has been signed with.
 
 :value:
     `Value` object, auto-generated, read-only
@@ -86,33 +111,27 @@ Schema
     The total value of this contract.
 
 :dateSigned:
-    string, :ref:`date`, auto-generated
+    string, :ref:`date`, auto-generated, read-only
 
     |ocdsDescription|
     The date the contract was signed. In the case of multiple signatures, the date of the last signature.
 
 :documents:
-    List of :ref:`Document` objects
+    Array of :ref:`Document` objects, optional
 
     |ocdsDescription|
     All documents and attachments related to the contract, including any notices.
 
 :changes:
-    List of :ref:`Change` objects.
-
-:amountPaid:
-
-    :amount: float, required
-    :currency: string, required, auto-generated
-    :valueAddedTaxIncluded: bool, required , auto-generated
-
-    Amount of money actually paid.
+    Array of :ref:`Change` objects, optional
 
 :merchandisingObject:
+    string, auto-generated, read-only
+
     Id of related :ref:`Lot`
 
 :milestones:
-    List of :ref:`Milestone` objects.
+    Array of :ref:`Milestones` objects.
 
     There are 3 milestones, that will be associated with contract after acquiring him `active.payment` status:
 
@@ -121,14 +140,16 @@ Schema
     * `reporting`
 
 :owner:
-    UserID of user, that owns this contract.
+    string, auto-generated, read-only
+
+    The entity whom the contract has been created by.
 
 :dateModified:
-    string, :ref:`date`, auto-generated
+    string, :ref:`date`, auto-generated, read-only
 
     Time, when contract was changed last time.
 
 :contractType:
-    string
+    string, auto-generated, read-only
 
     Type of the contract.

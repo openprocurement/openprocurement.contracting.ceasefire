@@ -12,23 +12,26 @@ Schema
 ------
 
 :name:
-    string, multilingual, uk (title) and en (title_en) translations are required
+    string, multilingual, optional
 
-    |ocdsDescription|
-    The common name of the organization.
+    Name of the organization.
     
 :identifier:
-    :ref:`Identifier`
+    :ref:`Identifier`, required
     
-    |ocdsDescription|
     The primary identifier for this organization. 
     
 :additionalIdentifiers:
-    List of :ref:`identifier` objects
+    List of :ref:`identifier` objects, optional
+
 :address:
     :ref:`Address`, required
+
 :contactPoint:
     :ref:`ContactPoint`, required
+
+:additionalContactPoints:
+    Array of :ref:`ContactPoint` objects, required
 
 
 .. index:: Company, id
@@ -67,6 +70,8 @@ Schema
 
    |ocdsDescription|
    The legally registered name of the organization.
+   
+   Full legal name (e.g. Nadra Bank).
 
 :uri:
    uri
@@ -89,25 +94,25 @@ Schema
 ------
 
 :streetAddress:
-    string, required
+    string, optional
     
     |ocdsDescription|
     The street address. For example, 1600 Amphitheatre Pkwy.
     
 :locality:
-    string, required
+    string, optional
     
     |ocdsDescription|
     The locality. For example, Mountain View.
     
 :region:
-    string, required
+    string, optional
     
     |ocdsDescription|
     The region. For example, CA.
     
 :postalCode:
-    string, required
+    string, optional
     
     |ocdsDescription|
     The postal code. For example, 94043.
@@ -158,16 +163,5 @@ Schema
     
     |ocdsDescription|
     A web address for the contact point/person.
-
-:availableLanguage:
-    string
-    
-    Possible values are:
-
-    * `uk`
-    * `en`
-    * `ru`
-
-    Specifies the language of communication. 
 
 Either `email` or `telephone` field has to be provided.

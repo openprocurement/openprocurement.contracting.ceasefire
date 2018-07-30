@@ -23,6 +23,8 @@ Contents:
 
    overview
    standard/index
+   contractWorkflow
+   milestoneWorkflow
    tutorial
 
 * :ref:`Authentication <openprocurementapi:authentication>`
