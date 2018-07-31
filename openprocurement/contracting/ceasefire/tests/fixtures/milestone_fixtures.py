@@ -10,6 +10,7 @@ from openprocurement.contracting.ceasefire.constants import (
 )
 from openprocurement.contracting.ceasefire.tests.helpers import (
     get_contract,
+    post_milestone_document,
 )
 from openprocurement.contracting.ceasefire.models import (
     Milestone,
@@ -19,7 +20,7 @@ from openprocurement.contracting.ceasefire.utils import (
 )
 
 
-def prepare_milestones(test_case, contract_data=None):
+def prepare_milestones(test_case, contract_data=None, doc_preload=True):
     """Prepares contract's milestones to make financing milestone have processing status
     """
     contract = create_contract(test_case, contract_data)
@@ -31,6 +32,9 @@ def prepare_milestones(test_case, contract_data=None):
     )
     test_case.assertEqual(contract_patch_response.status, '200 OK')
     milestones = munchify(contract_patch_response.json['data']['milestones'])
+    if doc_preload:
+        for milestone in milestones:
+            post_milestone_document(test_case, contract, milestone.id)
     return (contract, milestones)
 
 

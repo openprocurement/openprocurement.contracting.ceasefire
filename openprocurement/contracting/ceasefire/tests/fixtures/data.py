@@ -19,18 +19,23 @@ swiftsure_procuring_entity.update({
 })
 
 contract_create_data = {
-    'awardID': '376d560b2b2d452a80543865f3cab43e',
-    'contractID': 'a930574bf8cd405cb7f9c9ed4ca68061',
-    'contractType': 'ceasefire',
-    'dateSigned': datetime.now().isoformat(),
-    'merchandisingObject': 'a930574bf8cd999cb7f9c9ed4ca68061',
-    'period': {
-        'startDate': datetime.now().isoformat(),
-        'endDate': (datetime.now() + timedelta(days=30)).isoformat(),
+    "awardID": "376d560b2b2d452a80543865f3cab43e",
+    "contractID": "a930574bf8cd405cb7f9c9ed4ca68061",
+    "contractType": "ceasefire",
+    "dateSigned": datetime.now().isoformat(),
+    "merchandisingObject": "a930574bf8cd999cb7f9c9ed4ca68061",
+    "period": {
+        "startDate": datetime.now().isoformat(),
+        "endDate": (datetime.now() + timedelta(days=30)).isoformat(),
     },
-    'procuringEntity': swiftsure_procuring_entity,
-    'title': 'Test Contract',
-    'suppliers': [test_organization],
+    "procuringEntity": swiftsure_procuring_entity,
+    "title": "Test Contract",
+    "suppliers": [test_organization],
+    "value": {
+     "currency": "UAH",
+     "amount": 500.0,
+     "valueAddedTaxIncluded": True
+    },
     "items": [
         {
             "description": u"Земля для військовослужбовців",

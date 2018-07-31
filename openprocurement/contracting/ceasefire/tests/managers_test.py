@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, date
 from mock import (
     MagicMock,
     Mock,
+    patch,
 )
 from openprocurement.api.constants import (
     SANDBOX_MODE,
@@ -175,10 +176,18 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
     def test_change_milestone_to_not_met(self):
         manager = CeasefireMilestoneManager(Mock())
         mocked_request = Mock()
+
         mocked_milestone = Mock()
+        mocked_milestone.id = '1'
         mocked_contract = Mock()
+        doc_mock = Mock()
+        doc_mock.documentOf = 'milestone'
+        doc_mock.relatedItem = '1'
+        mocked_contract.documents = [doc_mock]
+
         mocked_milestone.__parent__ = mocked_contract
         mocked_milestone.status = 'processing'
+
         mocked_request.context = mocked_milestone
         mocked_request.validated = {'data': {}}
         mocked_request.json = {'data': {'status': 'notMet'}}

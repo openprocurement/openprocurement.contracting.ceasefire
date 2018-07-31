@@ -38,6 +38,8 @@ from openprocurement.contracting.ceasefire.tests.fixtures.milestone_fixtures imp
 
 class ContractResourceTest(BaseWebTest):
 
+    docservice = True
+
     def setUp(self):
         super(ContractResourceTest, self).setUp()
         self.app.authorization = ('Basic', ('broker5', ''))
