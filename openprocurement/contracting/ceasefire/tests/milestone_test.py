@@ -26,6 +26,8 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
 
 class MilestoneResourceTest(BaseWebTest):
 
+    docservice = True
+
     def setUp(self):
         super(MilestoneResourceTest, self).setUp()
         self.app.authorization = ('Basic', ('broker5', ''))
@@ -333,3 +335,17 @@ class MilestoneResourceTest(BaseWebTest):
         )
         patched_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         assert old_dateModified == patched_milestone.dateModified, 'dateModified must not be updated'
+
+    def test_patch_milestone_without_document(self):
+        contract, milestones = prepare_milestones(self, doc_preload=False)
+        financing_milestone = Milestone(milestones[0])
+        assert financing_milestone.type_ == 'financing'
+        dateMet_to_set = financing_milestone.dueDate - timedelta(days=5)
+
+        patch_milestone(
+            self,
+            contract,
+            financing_milestone.id,
+            {'data': {'dateMet': dateMet_to_set.isoformat()}},
+            status=403
+        )
