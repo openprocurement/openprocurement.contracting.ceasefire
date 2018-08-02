@@ -2,6 +2,7 @@
 .. include:: defs.hrst
 
 .. index:: Period, startDate, endDate
+
 .. _period:
 
 Period
@@ -138,15 +139,4 @@ Schema
     * `pending` - this change has been added.
     * `active` - this change has been confirmed.
 
-Workflow
---------
-
-.. graphviz::
-
-    digraph G {
-        A [ label="pending*" ]
-        B [ label="active"]
-         A -> B;
-    }
-
-\* marks initial state
+.. note:: The function associated with `changes` is not used.

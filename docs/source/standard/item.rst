@@ -20,27 +20,32 @@ Schema
     |ocdsDescription|
     A description of the goods, services to be provided.
 
+    Auction subject / asset description.
+
 :classification:
-    :ref:`Classification`
+    :ref:`Classification`, required
 
     |ocdsDescription|
     The primary classification for the item. See the
-    itemClassificationScheme to identify preferred classification lists,
-    including CPV and GSIN.
+    `itemClassificationScheme` to identify preferred classification lists,
+    including CAV and GSIN.
 
-    It is mandatory for `classification.scheme` to be `CPV`. The
-    `classification.id` should be valid CPV code.
+    It is required for `classification.scheme` to be `CPV` or `CAV-PS`. The
+    `classification.id` should be valid CPV or CAV-PS code.
+
+    The CPV & CAV-PS codes accuracy should be equal to the class (XXXX0000-Y) at least.
 
 :additionalClassifications:
-    List of :ref:`Classification` objects
+    List of :ref:`Classification` objects, optional
 
     |ocdsDescription|
     An array of additional classifications for the item. See the
-    itemClassificationScheme codelist for common options to use in OCDS. 
+    `itemClassificationScheme` codelist for common options to use in OCDS. 
     This may also be used to present codes from an internal classification
     scheme.
 
-    It is mandatory to have at least one item with `ДКПП` as `scheme`.
+    E.g.`CPVS`, `DK018`, `cadastralNumber` & `UA-EDR` can be chosen from the list. 
+    The codes are to be noted manually for `cadastralNumber` & `UA-EDR`.
 
 :unit:
     :ref:`Unit`
@@ -50,7 +55,7 @@ Schema
     Made up of a unit name, and the value of a single unit.
 
 :quantity:
-    integer
+    integer, required
 
     |ocdsDescription|
     The number of units required
@@ -61,7 +66,7 @@ Schema
     Address, where the item should be delivered.
 
 :deliveryLocation:
-    dictionary
+    dictionary, optional
 
     Geographical coordinates of delivery location. Element consist of the following items:
 
@@ -80,10 +85,12 @@ Schema
     Id of related :ref:`lot`.
 
 :registrationDetails:
-    List of :ref: `RegistrationDetails`
+    List of :ref:`registrationDetails`
 
 :address:
-    :ref: `Address`
+    :ref:`Address`
+
+    Address, where the item is located
 
 
 .. _Classification:
@@ -141,3 +148,39 @@ Schema
 
     |ocdsDescription|
     Name of the unit
+
+
+.. _registrationDetails:
+
+Registration Details
+====================
+
+Schema
+------
+
+:status:
+    string, required
+
+    Possible values are:
+
+    :`unknown`: 
+        default value;
+    :`registering`:
+        item is still registering;
+    :`complete`:
+        item has already been registered.
+
+:registrationID:
+    string, optional
+
+    The document identifier to refer to in the `paper` documentation.
+
+    Available for mentioning in status: complete.
+
+:registrationDate:
+    :ref:`Date`, optional
+
+    |ocdsDescription|
+    The date on which the document was first published.
+
+    Available for mentioning in status: complete.
