@@ -21,6 +21,7 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
     get_contract,
     get_milestone,
     patch_milestone,
+    patch_milestone_document,
 )
 
 
@@ -336,7 +337,7 @@ class MilestoneResourceTest(BaseWebTest):
         patched_milestone = get_milestone(self, contract.data.id, reporting_milestone.id)
         assert old_dateModified == patched_milestone.dateModified, 'dateModified must not be updated'
 
-    def test_patch_milestone_without_document(self):
+    def test_patch_financing_milestone_without_document(self):
         contract, milestones = prepare_milestones(self, doc_preload=False)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
@@ -346,6 +347,36 @@ class MilestoneResourceTest(BaseWebTest):
             self,
             contract,
             financing_milestone.id,
+            {'data': {'dateMet': dateMet_to_set.isoformat()}},
+            status=200
+        )
+
+
+    def test_patch_reporting_milestone_without_document(self):
+        contract, milestones = prepare_milestones_reporting(self)
+        reporting_milestone = milestones[2]
+        assert reporting_milestone.type_ == 'reporting'
+        dateMet_to_set = reporting_milestone.dueDate - timedelta(days=5)
+
+        # all milestones have documents attached, so we need to unattach one from the reporting milestone
+        reporting_milestone_document_id = None
+        for document in contract.data.documents:
+            if document.relatedItem == reporting_milestone.id:
+                reporting_milestone_document_id = document.id
+
+        patch_milestone_document(
+            self,
+            contract,
+            reporting_milestone.id,
+            reporting_milestone_document_id,
+            {'data': {'relatedItem': milestones[1].id}}
+        )
+
+        # now milestone has no documents, so we are welcome to test
+        patch_milestone(
+            self,
+            contract,
+            reporting_milestone.id,
             {'data': {'dateMet': dateMet_to_set.isoformat()}},
             status=403
         )
