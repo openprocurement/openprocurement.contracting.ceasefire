@@ -351,7 +351,6 @@ class MilestoneResourceTest(BaseWebTest):
             status=200
         )
 
-
     def test_patch_reporting_milestone_without_document(self):
         contract, milestones = prepare_milestones_reporting(self)
         reporting_milestone = milestones[2]

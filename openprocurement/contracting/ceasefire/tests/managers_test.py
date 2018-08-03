@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, date
 from mock import (
     MagicMock,
     Mock,
-    patch,
 )
 from openprocurement.api.constants import (
     SANDBOX_MODE,
