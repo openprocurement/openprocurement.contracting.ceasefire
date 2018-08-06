@@ -379,3 +379,37 @@ class MilestoneResourceTest(BaseWebTest):
             {'data': {'dateMet': dateMet_to_set.isoformat()}},
             status=403
         )
+
+    def test_patch_not_met_to_met(self):
+        contract, milestones = prepare_milestones(self)
+        financing_milestone = Milestone(milestones[0])
+        assert financing_milestone.type_ == 'financing'
+        dateMet_to_set = financing_milestone.dueDate - timedelta(days=5)
+
+        patch_milestone(
+            self,
+            contract,
+            financing_milestone.id,
+            {'data': {'status': 'notMet'}},
+        )
+
+        patch_milestone(
+            self,
+            contract,
+            financing_milestone.id,
+            {'data': {'dateMet': dateMet_to_set.isoformat()}},
+            status=403
+        )
+
+    def test_patch_met_to_notMet(self):
+        contract, milestones = prepare_milestones_approval(self)
+        financing_milestone = Milestone(milestones[0])
+        assert financing_milestone.type_ == 'financing'
+        assert financing_milestone.status == 'met'
+        patch_milestone(
+            self,
+            contract,
+            financing_milestone.id,
+            {'data': {'status': 'notMet'}},
+            status=403
+        )

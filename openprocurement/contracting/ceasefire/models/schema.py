@@ -56,6 +56,14 @@ class Milestone(Model):
     title = StringType()
     type_ = StringType(choices=constants.MILESTONE_TYPES, serialized_name='type')
 
+    def get_role(self):
+        root = self.__parent__.__parent__  # contract->root
+        request = root.request
+        auth_role = request.authenticated_role
+        if auth_role == 'Administrator':
+            return 'Administrator'
+        return 'edit_{0}'.format(request.context.status)
+
 
 class ICeasefireContract(Interface):
     """Contract marker interface

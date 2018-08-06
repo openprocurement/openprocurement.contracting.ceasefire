@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openprocurement.api.validation import validate_data
 from openprocurement.api.utils import error_handler
+from openprocurement.api.validation import validate_data
 from openprocurement.contracting.ceasefire.predicates import (
     allowed_contract_status_changes,
 )
 from openprocurement.contracting.ceasefire.constants import (
+    MILESTONE_TERMINAL_STATUSES,
     MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH,
 )
 
@@ -51,6 +52,19 @@ def validate_document_is_present_on_milestone_status_change(request, **kwargs):
             'body',
             'status',
             'Status change could not be completed. Add a document to this milestone'
+        )
+        request.errors.status = 403
+        raise error_handler(request)
+
+
+def validate_milestone_is_not_in_terminal_status(request, **kwargs):
+    milestone = request.context
+
+    if milestone.status in MILESTONE_TERMINAL_STATUSES:
+        request.errors.add(
+            'body',
+            'status',
+            "Can\'t update milestone in current ({0}) status".format(milestone.status)
         )
         request.errors.status = 403
         raise error_handler(request)
