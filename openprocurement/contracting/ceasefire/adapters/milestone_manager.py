@@ -27,6 +27,7 @@ from openprocurement.contracting.ceasefire.constants import (
     MILESTONE_APPROVAL_DUEDATE_OFFSET,
     MILESTONE_FINANCING_DUEDATE_OFFSET,
     MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS,
+    MILESTONE_TERMINAL_STATUSES,
     MILESTONE_TYPES,
 )
 
@@ -69,7 +70,7 @@ class CeasefireMilestoneManager(object):
 
         # `dateMet` handling
         patched_date_met_str = request.validated['data'].get('dateMet')
-        if patched_date_met_str:
+        if patched_date_met_str and (milestone.status not in MILESTONE_TERMINAL_STATUSES):
             new_dateMet = iso8601.parse_date(patched_date_met_str)
             self.validate_dateMet(request, new_dateMet)
             self.choose_status(milestone, new_dateMet)
