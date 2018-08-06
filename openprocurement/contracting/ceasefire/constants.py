@@ -56,3 +56,8 @@ MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS = 3
 MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH = (
     'reporting',
 )
+MILESTONE_TERMINAL_STATUSES = (
+    'met',
+    'patriallyMet',
+    'notMet',
+)

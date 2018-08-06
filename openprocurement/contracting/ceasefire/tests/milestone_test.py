@@ -397,10 +397,9 @@ class MilestoneResourceTest(BaseWebTest):
             self,
             contract,
             financing_milestone.id,
-            {'data': {'dateMet': dateMet_to_set.isoformat()}}
+            {'data': {'dateMet': dateMet_to_set.isoformat()}},
+            status=403
         )
-        patched_milestone = get_milestone(self, contract.data.id, financing_milestone.id)
-        assert patched_milestone.status == 'notMet'
 
     def test_patch_met_to_notMet(self):
         contract, milestones = prepare_milestones_approval(self)
@@ -412,6 +411,5 @@ class MilestoneResourceTest(BaseWebTest):
             contract,
             financing_milestone.id,
             {'data': {'status': 'notMet'}},
+            status=403
         )
-        patched_milestone = get_milestone(self, contract.data.id, financing_milestone.id)
-        assert patched_milestone.status == 'met'

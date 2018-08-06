@@ -22,6 +22,7 @@ from openprocurement.contracting.ceasefire.utils import (
 from openprocurement.contracting.ceasefire.models import Milestone
 from openprocurement.contracting.ceasefire.validators import (
     validate_document_is_present_on_milestone_status_change,
+    validate_milestone_is_not_in_terminal_status,
 )
 from openprocurement.contracting.ceasefire.constants import (
     MILESTONE_APPROVAL_DUEDATE_OFFSET,
@@ -36,6 +37,7 @@ class CeasefireMilestoneManager(object):
 
     change_validators = (
         validate_document_is_present_on_milestone_status_change,
+        validate_milestone_is_not_in_terminal_status,
     )
 
     def __init__(self, context):
