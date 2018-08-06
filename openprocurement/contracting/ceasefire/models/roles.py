@@ -16,7 +16,7 @@ MILESTONE_ROLES = {
             'status',
             'type_',
         ),
-    'edit':
+    'edit_scheduled':
         blacklist(
             'dateModified',
             'dueDate',
@@ -24,6 +24,20 @@ MILESTONE_ROLES = {
             'status',
             'type_',
         ),
+    'edit_processing':
+        blacklist(
+            'dateModified',
+            'dueDate',
+            'id',
+            'status',
+            'type_',
+        ),
+    'edit_met':
+        whitelist(),
+    'edit_partiallyMet':
+        whitelist(),
+    'edit_notMet':
+        whitelist(),
 }
 
 CONTRACT_ROLES = {
