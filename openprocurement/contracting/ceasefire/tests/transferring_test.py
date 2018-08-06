@@ -7,8 +7,7 @@ from openprocurement.contracting.core.tests.plugins.transferring.mixins import (
 )
 
 
-class ContractOwnershipChangeResourceTest(BaseContractWebTest,
-                                         ContractOwnershipChangeTestCaseMixin):
+class ContractOwnershipChangeResourceTest(BaseContractWebTest, ContractOwnershipChangeTestCaseMixin):
 
     def setUp(self):
         super(ContractOwnershipChangeResourceTest, self).setUp()

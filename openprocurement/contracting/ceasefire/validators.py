@@ -4,6 +4,9 @@ from openprocurement.api.utils import error_handler
 from openprocurement.contracting.ceasefire.predicates import (
     allowed_contract_status_changes,
 )
+from openprocurement.contracting.ceasefire.constants import (
+    MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH,
+)
 
 
 def validate_patch_milestone_data(request, **kwargs):
@@ -28,8 +31,10 @@ def validate_document_is_present_on_milestone_status_change(request, **kwargs):
     new_dateMet = request.validated['data'].get('dateMet')
     current_status = request.context.status
     current_dateMet = request.context.dateMet
+    milestone_type = request.context.type_
 
     is_status_change = (new_status != current_status) or (new_dateMet != current_dateMet)
+    milestone_requires_document = milestone_type in MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH
 
     contract_documents = request.context.__parent__.documents
     related_document = None
@@ -41,7 +46,7 @@ def validate_document_is_present_on_milestone_status_change(request, **kwargs):
             related_document = document
             break
 
-    if is_status_change and not related_document:
+    if is_status_change and not related_document and milestone_requires_document:
         request.errors.add(
             'body',
             'status',
