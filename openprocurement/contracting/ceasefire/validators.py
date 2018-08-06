@@ -64,7 +64,7 @@ def validate_milestone_is_not_in_terminal_status(request, **kwargs):
         request.errors.add(
             'body',
             'status',
-            "Can't update milestone in current ({0}) status".format(milestone.status)
+            "Can\'t update milestone in current ({0}) status".format(milestone.status)
         )
         request.errors.status = 403
         raise error_handler(request)
