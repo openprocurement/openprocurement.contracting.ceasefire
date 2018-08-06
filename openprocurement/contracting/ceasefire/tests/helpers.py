@@ -92,3 +92,15 @@ def post_milestone_document(test_case, contract, milestone_id):
         'relatedItem': milestone_id
     })
     return post_document(test_case, contract, data=doc_data)
+
+
+def patch_milestone_document(test_case, contract, milestone_id, document_id, data):
+    return test_case.app.patch_json(
+        CORE_ENDPOINTS['documents'].format(
+            contract_id=contract.data.id,
+            milestone_id=milestone_id,
+            document_id=document_id,
+        ) + "?acc_token={}".format(contract.access.token),
+        data,
+        status=200
+    )

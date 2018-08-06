@@ -11,7 +11,7 @@ ENDPOINTS = {
     'contracts_documents_collection': 'contracts/{contract_id}/documents',
 }
 # Model constants
-## Contract
+# Contract
 CONTRACT_STATUSES = (
     'active.confirmation',
     'active.payment',
@@ -37,7 +37,7 @@ CONTRACT_ALLOW_TERMINAL_STATUS_SET_USERIDS = (
 )
 DEFAULT_CONTRACT_STATUS = 'active.confirmation'
 CONTRACT_DEFAULT_TYPE = 'ceasefire'
-## Milestone
+# Milestone
 MILESTONE_TYPES = (  # ORDER MATTERS -- ПОРЯДОК ТИПІВ ВАЖЛИВИЙ
     'financing',
     'approval',
@@ -53,3 +53,6 @@ MILESTONE_STATUSES = (
 MILESTONE_FINANCING_DUEDATE_OFFSET = timedelta(days=60)
 MILESTONE_APPROVAL_DUEDATE_OFFSET = timedelta(days=20)
 MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS = 3
+MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH = (
+    'reporting',
+)

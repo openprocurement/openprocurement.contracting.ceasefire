@@ -24,7 +24,8 @@ def prepare_milestones(test_case, contract_data=None, doc_preload=True):
     """Prepares contract's milestones to make financing milestone have processing status
     """
     contract = create_contract(test_case, contract_data)
-    patch_contract_url = ENDPOINTS['contracts'].format(contract_id=contract.data.id) + "?acc_token={}".format(contract.access.token)
+    patch_contract_url = ENDPOINTS['contracts'].format(contract_id=contract.data.id) + \
+        "?acc_token={}".format(contract.access.token)
     # milestones will be populated when status changes to 'active.payment'
     contract_patch_response = test_case.app.patch_json(
         patch_contract_url,
