@@ -45,3 +45,5 @@ def includeme(config, plugin_config=None):
         (ICeasefireMilestone,),
         IMilestoneManager
     )
+    # add accreditation level
+    config.registry.accreditation['contract'][Contract._internal_type] = plugin_config['accreditation']
