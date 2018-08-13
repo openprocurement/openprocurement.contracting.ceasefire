@@ -84,13 +84,14 @@ def get_document(test_case, contract_id, document_id, serialize=True):
     return response
 
 
-def post_milestone_document(test_case, contract, milestone_id):
+def post_milestone_document(test_case, contract, milestone_id, **kwargs):
     doc_data = deepcopy(test_document_data)
     doc_data.update({
         'url': test_case.generate_docservice_url(),
         'documentOf': 'milestone',
         'relatedItem': milestone_id
     })
+    doc_data.update(kwargs)
     return post_document(test_case, contract, data=doc_data)
 
 

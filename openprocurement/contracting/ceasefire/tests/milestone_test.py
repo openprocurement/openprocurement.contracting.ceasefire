@@ -22,6 +22,7 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
     get_milestone,
     patch_milestone,
     patch_milestone_document,
+    post_milestone_document,
 )
 
 
@@ -413,3 +414,26 @@ class MilestoneResourceTest(BaseWebTest):
             {'data': {'status': 'notMet'}},
             status=403
         )
+
+    def test_upload_documents_with_milestone_related_types(self):
+        contract, milestones = prepare_milestones_approval(self)
+        reporting_milestone = Milestone(milestones[2])
+        assert reporting_milestone.type_ == 'reporting'
+        protocol_types = ('approvalProtocol', 'rejectionProtocol')
+
+        for protocol_type in protocol_types:
+            doc_id = post_milestone_document(
+                self,
+                contract,
+                reporting_milestone.id,
+                documentType=protocol_type
+            ).json['data']['id']
+
+            contract_after_post = get_contract(self, contract.data.id)
+
+            found_doc = None
+            for doc in contract_after_post.documents:
+                if doc.id == doc_id:
+                    found_doc = doc
+            assert found_doc, 'document was not attached to the contract'
+            assert found_doc.documentType == protocol_type
