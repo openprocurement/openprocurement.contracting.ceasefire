@@ -9,20 +9,16 @@ from openprocurement.contracting.ceasefire.constants import (
 from openprocurement.contracting.ceasefire.models import (
     Milestone,
 )
-from openprocurement.contracting.ceasefire.tests.fixtures.contract_fixtures import (
+from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
     create_contract,
-)
-from openprocurement.contracting.ceasefire.tests.fixtures.milestone_fixtures import (
-    prepare_milestones,
-    prepare_milestones_approval,
-    prepare_milestones_reporting,
-)
-from openprocurement.contracting.ceasefire.tests.helpers import (
     get_contract,
     get_milestone,
     patch_milestone,
     patch_milestone_document,
     post_milestone_document,
+    prepare_milestones,
+    prepare_milestones_approval,
+    prepare_milestones_reporting,
 )
 
 
