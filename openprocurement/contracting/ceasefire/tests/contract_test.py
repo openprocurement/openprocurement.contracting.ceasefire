@@ -31,7 +31,7 @@ from openprocurement.contracting.ceasefire.models import (
 from openprocurement.contracting.ceasefire.tests.constants import (
     CONTRACT_FIELDS_TO_HIDE,
 )
-from openprocurement.contracting.ceasefire.tests.fixtures.milestone_fixtures import (
+from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
     prepare_milestones_all_met,
 )
 

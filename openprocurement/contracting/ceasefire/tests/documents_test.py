@@ -9,10 +9,8 @@ from openprocurement.contracting.ceasefire.tests.helpers import (
     get_document,
     post_document,
 )
-from openprocurement.contracting.ceasefire.tests.fixtures.contract_fixtures import (
+from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
     create_contract,
-)
-from openprocurement.contracting.ceasefire.tests.fixtures.document_fixtures import (
     prepare_contract_with_document,
 )
 from openprocurement.contracting.core.constants import (
