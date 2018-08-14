@@ -4,13 +4,11 @@ import os
 from openprocurement.contracting.ceasefire.tests.base import (
     BaseWebTest
 )
-from openprocurement.contracting.ceasefire.tests.helpers import (
+from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
+    create_contract,
     get_contract,
     get_document,
     post_document,
-)
-from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
-    create_contract,
     prepare_contract_with_document,
 )
 from openprocurement.contracting.core.constants import (

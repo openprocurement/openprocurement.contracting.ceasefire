@@ -18,12 +18,8 @@ from openprocurement.contracting.ceasefire.constants import (
     DEFAULT_CONTRACT_STATUS,
     MILESTONE_FINANCING_DUEDATE_OFFSET
 )
-from .fixtures.data import contract_create_data
-from .fixtures.contract_fixtures import (
-    create_contract,
-)
-from openprocurement.contracting.ceasefire.tests.helpers import (
-    get_contract,
+from openprocurement.contracting.ceasefire.tests.fixtures.data import (
+    contract_create_data,
 )
 from openprocurement.contracting.ceasefire.models import (
     Contract,
@@ -32,6 +28,8 @@ from openprocurement.contracting.ceasefire.tests.constants import (
     CONTRACT_FIELDS_TO_HIDE,
 )
 from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
+    create_contract,
+    get_contract,
     prepare_milestones_all_met,
 )
 
