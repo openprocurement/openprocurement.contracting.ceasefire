@@ -233,17 +233,6 @@ class ContractResourceTest(BaseWebTest):
         )
         self.assertEqual(response.status, '422 Unprocessable Entity')
 
-    def test_patch_title(self):
-        contract = create_contract(self)
-        contract_id = contract.data.id
-        target_title = 'title11'
-        # set allowed status
-        response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
-            {'data': {'title': target_title}},
-        )
-        assert response.json['data']['title'] == target_title
-
 
 class ContractSandboxParametersTest(unittest.TestCase):
     """Test Ceasefire Contract model sandbox_parameters attribute
