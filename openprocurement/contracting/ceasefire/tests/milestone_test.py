@@ -436,11 +436,16 @@ class MilestoneResourceTest(BaseWebTest):
             assert found_doc.documentType == protocol_type
 
 
-    def test_milestone_patch_multilingual_fields(self):
+    def test_milestone_patch_attrs(self):
         contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
-        attrs = ('title_en', 'title_ru', 'description_en', 'description_ru')
+        attrs = (
+            'description_en',
+            'description_ru',
+            'title_en',
+            'title_ru',
+        )
 
         for attr in attrs:
             target_attr = uuid4().hex[:7]  # generate unique attr value
