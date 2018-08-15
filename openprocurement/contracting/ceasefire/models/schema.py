@@ -51,9 +51,13 @@ class Milestone(Model):
     dateMet = IsoDateTimeType()
     dateModified = IsoDateTimeType()
     description = StringType()
+    description_en = StringType()
+    description_ru = StringType()
     dueDate = IsoDateTimeType()
     status = StringType(choices=constants.MILESTONE_STATUSES)
     title = StringType()
+    title_en = StringType()
+    title_ru = StringType()
     type_ = StringType(choices=constants.MILESTONE_TYPES, serialized_name='type')
 
     def get_role(self):
