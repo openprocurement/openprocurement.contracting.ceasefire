@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from uuid import uuid4
 from datetime import timedelta
 from openprocurement.contracting.ceasefire.tests.base import (
     BaseWebTest
@@ -433,3 +434,22 @@ class MilestoneResourceTest(BaseWebTest):
                     found_doc = doc
             assert found_doc, 'document was not attached to the contract'
             assert found_doc.documentType == protocol_type
+
+
+    def test_milestone_patch_multilingual_fields(self):
+        contract, milestones = prepare_milestones(self)
+        financing_milestone = Milestone(milestones[0])
+        assert financing_milestone.type_ == 'financing'
+        attrs = ('title_en', 'title_ru', 'description_en', 'description_ru')
+
+        for attr in attrs:
+            target_attr = uuid4().hex[:7]  # generate unique attr value
+            patch_milestone(
+                self,
+                contract,
+                financing_milestone.id,
+                {'data': {attr: target_attr}}
+            )
+
+            patched_financing_milestone = get_milestone(self, contract.data.id, financing_milestone.id)
+            assert getattr(patched_financing_milestone, attr) == target_attr
