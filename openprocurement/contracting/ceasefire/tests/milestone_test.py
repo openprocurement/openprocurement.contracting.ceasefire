@@ -435,7 +435,6 @@ class MilestoneResourceTest(BaseWebTest):
             assert found_doc, 'document was not attached to the contract'
             assert found_doc.documentType == protocol_type
 
-
     def test_milestone_patch_attrs(self):
         contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
