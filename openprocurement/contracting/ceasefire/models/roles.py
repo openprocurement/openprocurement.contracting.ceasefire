@@ -51,7 +51,7 @@ CONTRACT_ROLES = {
     'view':
         whitelist(
             'awardID',
-            'relatedProcessID'
+            'relatedProcessID',
             'suppliers',
             'changes',
             'contractID',
