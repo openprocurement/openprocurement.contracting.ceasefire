@@ -16,7 +16,7 @@ class IncludemeTest(unittest.TestCase):
         config = MagicMock()
 
         plugin_config = MagicMock()
-        plugin_config.get.side_effect = [[], True]
+        plugin_config.get.side_effect = [[], True, None]
         logger = Mock()
         info = Mock()
         logger.info = info

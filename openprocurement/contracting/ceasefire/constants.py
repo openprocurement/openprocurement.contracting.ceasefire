@@ -61,3 +61,6 @@ MILESTONE_TERMINAL_STATUSES = (
     'patriallyMet',
     'notMet',
 )
+
+DEFAULT_LEVEL_OF_ACCREDITATION = {'create': [5],
+                                  'edit': [6]}
