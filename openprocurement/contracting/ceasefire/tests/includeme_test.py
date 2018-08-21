@@ -1,7 +1,8 @@
 import unittest
 from mock import (
     Mock,
-    patch,
+    MagicMock,
+    patch
 )
 
 from openprocurement.contracting.ceasefire.includeme import includeme
@@ -12,10 +13,10 @@ class IncludemeTest(unittest.TestCase):
     @patch('openprocurement.contracting.ceasefire.includeme.getLogger')
     @patch('openprocurement.contracting.ceasefire.includeme.get_distribution')
     def test_includeme(self, mocked_get_distribution, mocked_get_logger):
-        config = Mock()
+        config = MagicMock()
 
-        plugin_config = Mock()
-        plugin_config.get.side_effect = [[], True]
+        plugin_config = MagicMock()
+        plugin_config.get.side_effect = [[], True, None]
         logger = Mock()
         info = Mock()
         logger.info = info

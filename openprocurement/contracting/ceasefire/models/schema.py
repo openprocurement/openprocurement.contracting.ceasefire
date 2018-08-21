@@ -95,8 +95,6 @@ class Contract(BaseContract):
     type_ = StringType(serialized_name='type')
     merchandisingObject = StringType(required=True)  # id of related lot
 
-    create_accreditation = 5
-    edit_accreditation = 6
     _internal_type = 'ceasefire'
     if SANDBOX_MODE:
         sandbox_parameters = StringType()

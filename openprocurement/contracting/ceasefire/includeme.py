@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from logging import getLogger
 from pkg_resources import get_distribution
-
 from openprocurement.contracting.core.interfaces import (
     IContractManager,
     IMilestoneManager,
@@ -19,6 +18,7 @@ from openprocurement.contracting.ceasefire.models import (
 )
 from openprocurement.contracting.ceasefire.constants import (
     CONTRACT_DEFAULT_TYPE,
+    DEFAULT_LEVEL_OF_ACCREDITATION
 )
 
 
@@ -45,3 +45,7 @@ def includeme(config, plugin_config=None):
         (ICeasefireMilestone,),
         IMilestoneManager
     )
+    if not plugin_config.get('accreditation'):
+        config.registry.accreditation['contract'][Contract._internal_type] = DEFAULT_LEVEL_OF_ACCREDITATION
+    else:
+        config.registry.accreditation['contract'][Contract._internal_type] = plugin_config['accreditation']
