@@ -75,6 +75,11 @@ def validate_milestone_is_not_in_terminal_status(request, **kwargs):
 
 def validate_document_upload_milestone_not_terminal_status(request, **kwargs):
     contract = request.context
+
+    document_of = request.validated['document'].documentOf
+    if not document_of == 'milestone':
+        return
+
     milestone_id = request.validated['document'].relatedItem
 
     # document could be uploaded to the contract, not a milestone
