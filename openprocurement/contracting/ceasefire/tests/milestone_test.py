@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4
 from datetime import timedelta
+from webtest.app import AppError
 from openprocurement.contracting.ceasefire.tests.base import (
     BaseWebTest
 )
@@ -457,3 +458,19 @@ class MilestoneResourceTest(BaseWebTest):
 
             patched_financing_milestone = get_milestone(self, contract.data.id, financing_milestone.id)
             assert getattr(patched_financing_milestone, attr) == target_attr
+
+    def test_upload_document_in_terminal_status(self):
+        contract, milestones = prepare_milestones_approval(self)
+        financing_milestone = milestones[0]  # now it's in terminal status
+        self.assertEqual(financing_milestone.type_, 'financing')
+        self.assertEqual(financing_milestone.status, 'met')
+
+        try:
+            post_milestone_document(
+                self,
+                contract,
+                financing_milestone.id,
+            )
+        except AppError:
+            return  # we're looking for an exception
+        self.fail('Document was uploaded in the milestone with terminal status')
