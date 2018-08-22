@@ -5,6 +5,8 @@ from openprocurement.contracting.ceasefire.predicates import (
     allowed_contract_status_changes,
 )
 from openprocurement.contracting.ceasefire.constants import (
+    CONTRACT_PRE_TERMINAL_STATUSES,
+    CONTRACT_TERMINAL_STATUSES,
     MILESTONE_TERMINAL_STATUSES,
     MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH,
 )
@@ -75,6 +77,11 @@ def validate_milestone_is_not_in_terminal_status(request, **kwargs):
 
 def validate_document_upload_milestone_not_terminal_status(request, **kwargs):
     contract = request.context
+
+    document_of = request.validated['document'].documentOf
+    if not document_of == 'milestone':
+        return
+
     milestone_id = request.validated['document'].relatedItem
 
     # document could be uploaded to the contract, not a milestone
@@ -90,6 +97,25 @@ def validate_document_upload_milestone_not_terminal_status(request, **kwargs):
             'body',
             'status',
             "Can\'t attach document to milestone in current ({0}) status".format(milestone.status)
+        )
+        request.errors.status = 403
+        raise error_handler(request)
+
+
+def validate_document_upload_contract_not_terminal_status(request, **kwargs):
+    contract = request.context
+
+    document_of = request.validated['document'].documentOf
+    if not document_of == 'contract':
+        return
+
+    forbidden_statuses = CONTRACT_TERMINAL_STATUSES + CONTRACT_PRE_TERMINAL_STATUSES
+
+    if contract.status in forbidden_statuses:
+        request.errors.add(
+            'body',
+            'status',
+            "Can\'t attach document to contract in current ({0}) status".format(contract.status)
         )
         request.errors.status = 403
         raise error_handler(request)

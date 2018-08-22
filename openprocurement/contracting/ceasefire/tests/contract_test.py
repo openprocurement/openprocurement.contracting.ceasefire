@@ -1,7 +1,7 @@
 import time
 import unittest
 
-from copy import copy
+from copy import copy, deepcopy
 
 from schematics.exceptions import ModelConversionError
 from openprocurement.api.constants import (
@@ -21,6 +21,9 @@ from openprocurement.contracting.ceasefire.constants import (
 from openprocurement.contracting.ceasefire.tests.fixtures.data import (
     contract_create_data,
 )
+from openprocurement.api.tests.blanks.json_data import (
+    test_document_data,
+)
 from openprocurement.contracting.ceasefire.models import (
     Contract,
 )
@@ -30,6 +33,7 @@ from openprocurement.contracting.ceasefire.tests.constants import (
 from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
     create_contract,
     get_contract,
+    post_document,
     prepare_milestones_all_met,
 )
 
@@ -232,6 +236,22 @@ class ContractResourceTest(BaseWebTest):
             status=422
         )
         self.assertEqual(response.status, '422 Unprocessable Entity')
+
+    def test_upload_document_in_terminal_status(self):
+        contract, _ = prepare_milestones_all_met(self)
+        self.assertEqual(contract.data.status, 'pending.terminated')
+        data = deepcopy(test_document_data)
+        data.update({
+            'url': self.generate_docservice_url(),
+            'documentOf': 'contract',
+            'relatedItem': contract.data.id
+        })
+        post_document(
+            self,
+            contract,
+            data=data,
+            status_code=403
+        )
 
 
 class ContractSandboxParametersTest(unittest.TestCase):
