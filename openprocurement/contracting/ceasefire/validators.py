@@ -8,6 +8,9 @@ from openprocurement.contracting.ceasefire.constants import (
     MILESTONE_TERMINAL_STATUSES,
     MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH,
 )
+from openprocurement.contracting.ceasefire.utils import (
+    search_list_with_dicts,
+)
 
 
 def validate_patch_milestone_data(request, **kwargs):
@@ -65,6 +68,20 @@ def validate_milestone_is_not_in_terminal_status(request, **kwargs):
             'body',
             'status',
             "Can\'t update milestone in current ({0}) status".format(milestone.status)
+        )
+        request.errors.status = 403
+        raise error_handler(request)
+
+def validate_document_upload_milestone_not_terminal_status(request, **kwargs):
+    contract = request.context
+    milestone_id = request.validated['document'].relatedItem
+    milestone = search_list_with_dicts(contract.milestones, 'id', milestone_id)
+
+    if milestone.status in MILESTONE_TERMINAL_STATUSES:
+        request.errors.add(
+            'body',
+            'status',
+            "Can\'t attach document to milestone in current ({0}) status".format(milestone.status)
         )
         request.errors.status = 403
         raise error_handler(request)
