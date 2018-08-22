@@ -75,9 +75,16 @@ def validate_milestone_is_not_in_terminal_status(request, **kwargs):
 def validate_document_upload_milestone_not_terminal_status(request, **kwargs):
     contract = request.context
     milestone_id = request.validated['document'].relatedItem
-    milestone = search_list_with_dicts(contract.milestones, 'id', milestone_id)
 
-    if milestone.status in MILESTONE_TERMINAL_STATUSES:
+    # document could be uploaded to the contract, not a milestone
+    contract_has_milestones = contract.milestones is not None
+    if not contract_has_milestones:
+        return
+
+    milestone = search_list_with_dicts(contract.milestones, 'id', milestone_id)
+    terminal_status = milestone.status in MILESTONE_TERMINAL_STATUSES
+
+    if terminal_status:
         request.errors.add(
             'body',
             'status',
