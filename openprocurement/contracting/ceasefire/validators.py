@@ -72,6 +72,7 @@ def validate_milestone_is_not_in_terminal_status(request, **kwargs):
         request.errors.status = 403
         raise error_handler(request)
 
+
 def validate_document_upload_milestone_not_terminal_status(request, **kwargs):
     contract = request.context
     milestone_id = request.validated['document'].relatedItem
