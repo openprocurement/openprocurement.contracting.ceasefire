@@ -76,7 +76,7 @@ class MilestoneResourceTest(BaseWebTest):
         updated_contract = get_contract(self, contract.data.id)
         assert updated_contract.status == 'active.approval', 'Contract status was not updated'
 
-    def test_milestone_patch_financing_dateMet_patrially_met(self):
+    def test_milestone_patch_financing_dateMet_partially_met(self):
         contract, milestones = prepare_milestones(self)
         financing_milestone = Milestone(milestones[0])
         assert financing_milestone.type_ == 'financing'
