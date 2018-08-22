@@ -6,6 +6,7 @@ from openprocurement.contracting.core.interfaces import (
     IDocumentManager,
 )
 from openprocurement.contracting.ceasefire.validators import (
+    validate_document_upload_contract_not_terminal_status,
     validate_document_upload_milestone_not_terminal_status,
 )
 
@@ -14,6 +15,7 @@ from openprocurement.contracting.ceasefire.validators import (
 class CeasefireContractDocumentManager(object):
 
     create_validators = (
+        validate_document_upload_contract_not_terminal_status,
         validate_document_upload_milestone_not_terminal_status,
     )
 
