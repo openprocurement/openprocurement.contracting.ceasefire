@@ -58,7 +58,7 @@ MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH = (
 )
 MILESTONE_TERMINAL_STATUSES = (
     'met',
-    'patriallyMet',
+    'partiallyMet',
     'notMet',
 )
 
