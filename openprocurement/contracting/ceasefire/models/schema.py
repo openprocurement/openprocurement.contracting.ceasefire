@@ -14,7 +14,7 @@ from openprocurement.api.models.common import (
     Period,
 )
 from openprocurement.auctions.core.models import (
-    SwiftsureItem,
+    LokiItem,
     SwiftsureProcuringEntity,
     dgfOrganization,
 )
@@ -83,7 +83,7 @@ class Contract(BaseContract):
         roles = CONTRACT_ROLES
 
     awardID = StringType(required=True)  # overridden to make required
-    items = ListType(ModelType(SwiftsureItem), required=False, min_size=1, validators=[validate_items_uniq])
+    items = ListType(ModelType(LokiItem), required=False, min_size=1, validators=[validate_items_uniq])
     suppliers = ListType(ModelType(dgfOrganization), required=True)
     contractID = StringType(required=True)  # overridden to make required
     dateSigned = IsoDateTimeType(required=True)  # overridden to make required

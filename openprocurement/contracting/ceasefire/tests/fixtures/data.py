@@ -44,11 +44,6 @@ contract_create_data = {
                 "id": u"66113000-5",
                 "description": u"Земельні ділянки"
             },
-            "additionalClassifications": [{
-                "scheme": "CAV",
-                "id": "39513200-3",
-                "description": "папір і картон гофровані, паперова й картонна тара"
-            }],
             "unit": {
                 "name": u"item",
                 "code": u"44617100-9"
