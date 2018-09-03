@@ -132,7 +132,6 @@ class ContractResourceTest(BaseWebTest):
 
     def test_patch_contract_status_active_payment(self):
         contract = create_contract(self)
-        contract_id = contract.data.id
         response = patch_contract(
             self,
             contract,
@@ -162,7 +161,6 @@ class ContractResourceTest(BaseWebTest):
 
     def test_patch_response_have_not_excessive_fields(self):
         contract = create_contract(self)
-        contract_id = contract.data.id
         response = patch_contract(
             self,
             contract,
@@ -174,14 +172,13 @@ class ContractResourceTest(BaseWebTest):
 
     def test_patch_contract_forbidden_status(self):
         contract = create_contract(self)
-        contract_id = contract.data.id
         # set allowed status
-        response = patch_contract(
+        patch_contract(
             self,
             contract,
             {'data': {'status': 'active.payment'}},
         )
-        response = patch_contract(
+        patch_contract(
             self,
             contract,
             {'data': {'status': 'active.approval'}},
@@ -191,7 +188,7 @@ class ContractResourceTest(BaseWebTest):
     def test_set_terminal_status_with_allowed_role(self):
         contract, _ = prepare_milestones_all_met(self)
         self.app.authorization = ('Basic', ('caravan', ''))
-        response = patch_contract(
+        patch_contract(
             self,
             contract,
             {'data': {'status': 'terminated'}},
@@ -234,7 +231,6 @@ class ContractResourceTest(BaseWebTest):
 
     def test_patch_internal_type(self):
         contract = create_contract(self)
-        contract_id = contract.data.id
         # set allowed status
         response = patch_contract(
             self,
