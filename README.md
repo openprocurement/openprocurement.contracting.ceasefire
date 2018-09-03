@@ -6,6 +6,9 @@
 
 The documentation of this project may be built with Sphinx.
 
+Also there are some diagrams, describing workflow and code structure of the project.
+You can find them in `docs/ceasefire_diagrams.xml` and open them with [draw.io](https://draw.io)
+
 ### How to build it
 
 Commands to build the docs:
