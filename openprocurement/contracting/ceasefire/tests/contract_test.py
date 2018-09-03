@@ -33,6 +33,7 @@ from openprocurement.contracting.ceasefire.tests.constants import (
 from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
     create_contract,
     get_contract,
+    patch_contract,
     post_document,
     prepare_milestones_all_met,
 )
@@ -132,8 +133,9 @@ class ContractResourceTest(BaseWebTest):
     def test_patch_contract_status_active_payment(self):
         contract = create_contract(self)
         contract_id = contract.data.id
-        response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
+        response = patch_contract(
+            self,
+            contract,
             {'data': {'status': 'active.payment'}},
         )
         self.assertEqual(response.status, '200 OK')
@@ -161,8 +163,9 @@ class ContractResourceTest(BaseWebTest):
     def test_patch_response_have_not_excessive_fields(self):
         contract = create_contract(self)
         contract_id = contract.data.id
-        response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
+        response = patch_contract(
+            self,
+            contract,
             {'data': {'status': 'active.payment'}},
         )
         self.assertEqual(response.status, '200 OK')
@@ -173,12 +176,14 @@ class ContractResourceTest(BaseWebTest):
         contract = create_contract(self)
         contract_id = contract.data.id
         # set allowed status
-        self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
+        response = patch_contract(
+            self,
+            contract,
             {'data': {'status': 'active.payment'}},
         )
-        self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
+        response = patch_contract(
+            self,
+            contract,
             {'data': {'status': 'active.approval'}},
             status=403
         )
@@ -186,8 +191,9 @@ class ContractResourceTest(BaseWebTest):
     def test_set_terminal_status_with_allowed_role(self):
         contract, _ = prepare_milestones_all_met(self)
         self.app.authorization = ('Basic', ('caravan', ''))
-        self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract.data.id),
+        response = patch_contract(
+            self,
+            contract,
             {'data': {'status': 'terminated'}},
         )
         terminated_contract = get_contract(self, contract.data.id)
@@ -230,8 +236,9 @@ class ContractResourceTest(BaseWebTest):
         contract = create_contract(self)
         contract_id = contract.data.id
         # set allowed status
-        response = self.app.patch_json(
-            ENDPOINTS['contracts'].format(contract_id=contract_id) + "?acc_token={}".format(contract.access.token),
+        response = patch_contract(
+            self,
+            contract,
             {'data': {'_internal_type': 'lucy_lu'}},
             status=422
         )
