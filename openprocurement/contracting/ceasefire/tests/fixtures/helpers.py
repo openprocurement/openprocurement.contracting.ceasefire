@@ -34,6 +34,16 @@ def get_contract(test_case, contract_id):
     return Contract(response.json['data'])
 
 
+def patch_contract(test_case, contract, data, status=200):
+    return test_case.app.patch_json(
+        ENDPOINTS['contracts'].format(
+            contract_id=contract.data.id,
+        ) + "?acc_token={}".format(contract.access.token),
+        data,
+        status=status,
+    )
+
+
 def get_milestone(test_case, contract_id, milestone_id):
     response = test_case.app.get(ENDPOINTS['milestones'].format(
         contract_id=contract_id,
@@ -130,12 +140,11 @@ def prepare_milestones(test_case, contract_data=None, doc_preload=True):
     """Prepares contract's milestones to make financing milestone have processing status
     """
     contract = create_contract(test_case, contract_data)
-    patch_contract_url = ENDPOINTS['contracts'].format(contract_id=contract.data.id) + \
-        "?acc_token={}".format(contract.access.token)
     # milestones will be populated when status changes to 'active.payment'
-    contract_patch_response = test_case.app.patch_json(
-        patch_contract_url,
-        {'data': {'status': 'active.payment'}}
+    contract_patch_response = patch_contract(
+        test_case,
+        contract,
+        {'data': {'status': 'active.payment'}},
     )
     test_case.assertEqual(contract_patch_response.status, '200 OK')
     milestones = munchify(contract_patch_response.json['data']['milestones'])
@@ -153,11 +162,10 @@ def prepare_milestones_approval(test_case, contract_data=None):
     assert financing_milestone.type_ == 'financing'
     dateMet_to_set = financing_milestone.dueDate - timedelta(days=5)
 
-    response = test_case.app.patch_json(
-        ENDPOINTS['milestones'].format(
-            contract_id=contract.data.id,
-            milestone_id=milestones[0]['id'],
-        ) + "?acc_token={}".format(contract.access.token),
+    response = patch_milestone(
+        test_case,
+        contract,
+        financing_milestone.id,
         {'data': {'dateMet': dateMet_to_set.isoformat()}}
     )
     test_case.assertEqual(response.status, '200 OK')
@@ -174,11 +182,10 @@ def prepare_milestones_reporting(test_case, contract_data=None):
     assert approval_milestone.type_ == 'approval'
     dateMet_to_set = approval_milestone.dueDate - timedelta(days=5)
 
-    response = test_case.app.patch_json(
-        ENDPOINTS['milestones'].format(
-            contract_id=contract.data.id,
-            milestone_id=approval_milestone['id'],
-        ) + "?acc_token={}".format(contract.access.token),
+    response = patch_milestone(
+        test_case,
+        contract,
+        approval_milestone.id,
         {'data': {'dateMet': dateMet_to_set.isoformat()}}
     )
     test_case.assertEqual(response.status, '200 OK')
@@ -194,11 +201,10 @@ def prepare_milestones_all_met(test_case, contract_data=None):
 
     assert reporting_milestone.type_ == 'reporting'
 
-    response = test_case.app.patch_json(
-        ENDPOINTS['milestones'].format(
-            contract_id=contract.data.id,
-            milestone_id=reporting_milestone['id'],
-        ) + "?acc_token={}".format(contract.access.token),
+    response = patch_milestone(
+        test_case,
+        contract,
+        reporting_milestone.id,
         {'data': {'dateMet': dateMet_to_set.isoformat()}}
     )
 
