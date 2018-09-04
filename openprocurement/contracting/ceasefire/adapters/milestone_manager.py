@@ -8,7 +8,7 @@ from openprocurement.api.utils import (
     error_handler,
     validate_with,
 )
-from openprocurement.auctions.core.utils import (
+from openprocurement.api.utils import (
     calculate_business_date,
 )
 from openprocurement.contracting.core.utils import (
