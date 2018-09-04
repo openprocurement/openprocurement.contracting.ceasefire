@@ -13,8 +13,8 @@ from openprocurement.api.validation import validate_items_uniq
 from openprocurement.api.models.common import (
     Period,
 )
+from openprocurement.api.models.registry_models import LokiItem
 from openprocurement.auctions.core.models import (
-    LokiItem,
     SwiftsureProcuringEntity,
     dgfOrganization,
 )
