@@ -4,10 +4,12 @@ import iso8601
 from datetime import datetime, date
 from zope.interface import implementer
 
-from openprocurement.api.utils import error_handler
+from openprocurement.api.utils import (
+    error_handler,
+    validate_with,
+)
 from openprocurement.auctions.core.utils import (
     calculate_business_date,
-    validate_with,
 )
 from openprocurement.contracting.core.utils import (
     LOGGER,
