@@ -14,7 +14,7 @@ from openprocurement.api.models.common import (
     Period,
 )
 from openprocurement.api.models.registry_models import LokiItem
-from openprocurement.auctions.core.models import (
+from openprocurement.api.models.schema import (
     SwiftsureProcuringEntity,
     dgfOrganization,
 )
