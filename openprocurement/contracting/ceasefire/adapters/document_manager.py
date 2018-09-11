@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from zope.interface import implementer
 
-from openprocurement.auctions.core.utils import validate_with
+from openprocurement.api.utils import validate_with
 from openprocurement.contracting.core.interfaces import (
     IDocumentManager,
 )

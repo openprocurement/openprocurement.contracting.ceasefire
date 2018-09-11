@@ -9,7 +9,7 @@ from mock import (
 from openprocurement.api.constants import (
     SANDBOX_MODE,
 )
-from openprocurement.auctions.core.utils import (
+from openprocurement.api.utils import (
     calculate_business_date,
 )
 from openprocurement.contracting.core.utils import (
