@@ -18,7 +18,6 @@ docs_requires = requires + [
 
 api_requires = requires + [
     'openprocurement.api>=2.4',
-    'openprocurement.auctions.core',
     'openprocurement.contracting.core',
 ]
 
