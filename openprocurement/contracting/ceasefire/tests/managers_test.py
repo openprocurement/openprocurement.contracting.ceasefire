@@ -100,8 +100,9 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
             self.contract.dateSigned,
             MILESTONE_FINANCING_DUEDATE_OFFSET,
             context=None,
-            working_days=True,
-            specific_hour=18)
+            working_days=False,
+            specific_hour=18,
+            result_is_working_day=True)
         manager.set_dueDate(milestone_mock, self.contract)
         self.assertEqual(milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
@@ -122,8 +123,9 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
             financing_milestone_mock.dateMet,
             MILESTONE_APPROVAL_DUEDATE_OFFSET,
             context=None,
-            working_days=True,
-            specific_hour=18)
+            working_days=False,
+            specific_hour=18,
+            result_is_working_day=True)
         manager.set_dueDate(approval_milestone_mock, self.contract)
         self.assertEqual(approval_milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
@@ -167,8 +169,9 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
             self.contract.dateSigned,
             MILESTONE_FINANCING_DUEDATE_OFFSET,
             context=self.contract,
-            working_days=True,
-            specific_hour=18)
+            working_days=False,
+            specific_hour=18,
+            result_is_working_day=True)
         manager.set_dueDate(milestone_mock, self.contract)
         self.assertEqual(milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
