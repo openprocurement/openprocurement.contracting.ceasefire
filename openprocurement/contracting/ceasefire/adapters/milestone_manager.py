@@ -106,16 +106,18 @@ class CeasefireMilestoneManager(object):
                 contract.dateSigned,
                 MILESTONE_FINANCING_DUEDATE_OFFSET,
                 context=contract,
-                working_days=True,
-                specific_hour=18)
+                working_days=False,
+                specific_hour=18,
+                result_is_working_day=True)
         elif milestone.type_ == 'approval':
             financing_milestone = search_list_with_dicts(contract.milestones, 'type_', 'financing')
             milestone.dueDate = calculate_business_date(
                 financing_milestone.dateMet,
                 MILESTONE_APPROVAL_DUEDATE_OFFSET,
                 context=contract,
-                working_days=True,
-                specific_hour=18)
+                working_days=False,
+                specific_hour=18,
+                result_is_working_day=True)
         elif milestone.type_ == 'reporting' and milestone.dueDate is None:
             approval_milestone = search_list_with_dicts(contract.milestones, 'type_', 'approval')
             milestone.dueDate = datetime.combine(

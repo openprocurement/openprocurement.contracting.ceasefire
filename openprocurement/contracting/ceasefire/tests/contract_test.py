@@ -150,8 +150,9 @@ class ContractResourceTest(BaseWebTest):
             contract.dateSigned,
             MILESTONE_FINANCING_DUEDATE_OFFSET,
             context=None,
-            working_days=True,
-            specific_hour=18
+            working_days=False,
+            specific_hour=18,
+            result_is_working_day=True
         )
         self.assertEqual(
             financial_milestone['dueDate'],
