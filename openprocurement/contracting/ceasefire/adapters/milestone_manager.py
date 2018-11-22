@@ -10,6 +10,7 @@ from openprocurement.api.utils import (
 )
 from openprocurement.api.utils import (
     calculate_business_date,
+    search_list_with_dicts,
 )
 from openprocurement.contracting.core.utils import (
     LOGGER,
@@ -18,7 +19,6 @@ from openprocurement.contracting.core.interfaces import (
     IMilestoneManager,
 )
 from openprocurement.contracting.ceasefire.utils import (
-    search_list_with_dicts,
     view_milestones_by_type,
 )
 from openprocurement.contracting.ceasefire.models import Milestone

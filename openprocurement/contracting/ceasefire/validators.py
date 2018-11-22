@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from openprocurement.api.utils import error_handler
+from openprocurement.api.utils import (
+    error_handler,
+    search_list_with_dicts,
+)
 from openprocurement.api.validation import validate_data
 from openprocurement.contracting.ceasefire.predicates import (
     allowed_contract_status_changes,
@@ -9,9 +12,6 @@ from openprocurement.contracting.ceasefire.constants import (
     CONTRACT_TERMINAL_STATUSES,
     MILESTONE_TERMINAL_STATUSES,
     MILESTONE_TYPES_REQUIRE_DOCUMENT_TO_PATCH,
-)
-from openprocurement.contracting.ceasefire.utils import (
-    search_list_with_dicts,
 )
 
 
