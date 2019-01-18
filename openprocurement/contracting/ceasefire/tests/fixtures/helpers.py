@@ -89,6 +89,29 @@ def post_document(test_case, contract, **kwargs):
     return response
 
 
+def put_document(test_case, contract, document_id, **kwargs):
+    data = {}
+    data = deepcopy(test_document_data)
+    data.update({
+        'url': test_case.generate_docservice_url(),
+        'documentOf': 'lot',
+        'relatedItem': '01' * 16
+    })
+    data.update(kwargs.get('data', {}))
+
+    target_status = 200
+    if kwargs.get('status_code'):
+        target_status = kwargs['status_code']
+
+    url = CORE_ENDPOINTS['documents'].format(
+        contract_id=contract.data.id,
+        document_id=document_id,
+    ) + "?acc_token={}".format(contract.access.token)
+
+    response = test_case.app.put_json(url, {'data': data}, status=target_status)
+    return response
+
+
 def get_document(test_case, contract_id, document_id, serialize=True):
     response = test_case.app.get(CORE_ENDPOINTS['documents'].format(
         contract_id=contract_id,
