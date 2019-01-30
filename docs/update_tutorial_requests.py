@@ -7,7 +7,7 @@ from time import sleep
 from datetime import timedelta
 
 from openprocurement.api.tests.blanks.json_data import test_document_data
-from openprocurement.auctions.core.tests.base import PrefixedRequestClass
+from openprocurement.api.tests.base import PrefixedRequestClass
 from openprocurement.contracting.ceasefire.constants import ENDPOINTS
 from openprocurement.contracting.ceasefire.tests import base
 from openprocurement.contracting.ceasefire.tests.fixtures.data import contract_create_data
