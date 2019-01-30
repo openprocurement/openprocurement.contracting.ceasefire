@@ -1,5 +1,5 @@
 # check if there is buildout present
-if [ ! -e bin/buildout ]
+if [ ! -e bin/buildout ] || [ ! -e bin/nosetests ]
 # if it isn't - create it
 then
     python bootstrap.py
