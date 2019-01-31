@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from openprocurement.api.utils.common import get_now
+
+from datetime import timedelta
 from copy import deepcopy
 
 
@@ -37,11 +39,11 @@ contract_create_data = {
     "awardID": "376d560b2b2d452a80543865f3cab43e",
     "contractID": "a930574bf8cd405cb7f9c9ed4ca68061",
     "contractType": "ceasefire",
-    "dateSigned": datetime.now().isoformat(),
+    "dateSigned": get_now().isoformat(),
     "merchandisingObject": "a930574bf8cd999cb7f9c9ed4ca68061",
     "period": {
-        "startDate": datetime.now().isoformat(),
-        "endDate": (datetime.now() + timedelta(days=30)).isoformat(),
+        "startDate": get_now().isoformat(),
+        "endDate": (get_now() + timedelta(days=30)).isoformat(),
     },
     "procuringEntity": swiftsure_procuring_entity,
     "title": "Test Contract",
