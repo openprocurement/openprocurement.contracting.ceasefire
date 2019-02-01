@@ -6,8 +6,21 @@ Ceasefire contracting
 Features
 --------
 
-* First one
-* Second
+ * On contract activation in award, the object `contract` is formed in the `Contracting Module` component
+ * For object activation in the system the owner has to use the transfer token and assign the status `active.payment` to the object
+ * The created `contract` contains three `milestones`
+ * Each `milestone` corresponds to certain contract terms and conditions
+ * Each `milestone` contains dueDate corresponding to the final date until which all the indicated terms and conditions are to be fulfilled
+ * In order to confirm the completion of the `financing milestone` conditions the Organiser is obliged to set the `dateMet`  for identification of payment reception from the participant
+ * On condition that the payment was not received the Organiser has the right to set the milestone to status `notMet` upon which the `contract` will be assigned the status `pending.unsuccessful`
+ * In order to confirm the completion of the `approval milestone` conditions the Organiser has to upload the document (`documentType:approvalProtocol`) into the contract having provided the indications `documentOf:milestone` and `relatedItem` with the corresponding milestone identifier and to set the `dateMet` 
+ * In order to assign the `notMet` status to `pproval mileston` it is necessary to upload the document (`documentType:rejectionProtocol`) upon which the contract status will be changed to `pending.unsuccessful`
+ * In order to confirm the completion of the `reporting milestone` conditions the Organiser has to set `dateMet` 
+ * In order to assign the `notMet` status to rejection milestone it is necessary to upload the document (`documentType:rejectionProtocol`) upon which the contract status will be changed to `pending.unsuccessful`
+ * If dateMet precedes the `dueDate`, the `milestone` status should be changed to met, if not - to `partiallyMet`
+ * All the actions must be carried out by the Organiser
+
+
 
 Conventions
 -----------
@@ -43,14 +56,16 @@ The project has beta status.
 
 The source repository for this project is on GitHub: https://github.com/openprocurement/openprocurement.contracting.ceasefire
 
-You can leave feedback by raising a new issue on the `issue tracker
-<https://github.com/openprocurement/openprocurement.contracting.ceasefire/issues>`_ (GitHub
-registration necessary).  
+You can leave feedback by raising a new issue on the `issue tracker <https://github.com/openprocurement/openprocurement.contracting.ceasefire/issues>`_ (GitHub registration necessary).  
 
 Documentation of related packages
 ---------------------------------
 
 * `OpenProcurement API <http://api-docs.openprocurement.org/en/latest/>`_
+* `Assets Registry <http://assetsbounce.api-docs.registry.ea2.openprocurement.io/en/latest/>`_
+* `Lots Registry <http://lotsloki.api-docs.registry.ea2.openprocurement.io/en/latest/>`_
+* `Sellout.english <http://sellout-english.api-docs.ea2.openprocurement.io/en/latest/>`_
+* `Tessel <https://openprocurementauctionstessel.readthedocs.io/en/latest/>`_
 
 API stability
 -------------
