@@ -6,6 +6,9 @@ from munch import munchify
 from openprocurement.api.models.ocds import (
     BaseDocument,
 )
+from openprocurement.api.utils import (
+    search_list_with_dicts,
+)
 from openprocurement.api.tests.blanks.json_data import (
     test_document_data,
 )
@@ -18,9 +21,6 @@ from openprocurement.contracting.ceasefire.constants import (
 from openprocurement.contracting.ceasefire.models import (
     Contract,
     Milestone,
-)
-from openprocurement.contracting.ceasefire.utils import (
-    search_list_with_dicts,
 )
 from .data import contract_create_data
 
