@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.0.3'
+VERSION = '1.0.4'
 
 requires = [
     'setuptools',
@@ -28,7 +28,7 @@ entry_points = {
 }
 
 setup(name='openprocurement.contracting.ceasefire',
-      version=version,
+      version=VERSION,
       description="",
       long_description=open("README.md").read(),
       classifiers=[
