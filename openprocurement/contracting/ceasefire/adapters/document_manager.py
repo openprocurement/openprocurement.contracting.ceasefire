@@ -28,3 +28,9 @@ class CeasefireContractDocumentManager(object):
 
     def change_document(self, request):
         pass
+
+    def put_document(self, request):
+        document = request.validated['document']
+        contract = request.context.__parent__
+
+        contract.documents.append(document)

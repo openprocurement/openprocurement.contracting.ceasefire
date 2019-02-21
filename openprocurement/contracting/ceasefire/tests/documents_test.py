@@ -10,6 +10,7 @@ from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
     get_document,
     post_document,
     prepare_contract_with_document,
+    put_document,
 )
 from openprocurement.contracting.core.constants import (
     ENDPOINTS as CORE_ENDPOINTS,
@@ -103,3 +104,17 @@ class CeasefireDocumentResourceTest(BaseWebTest):
             {'data': {'title': 'lalal'}},
             status=403
         )
+
+    def test_put_ok(self):
+        contract, document = prepare_contract_with_document(self)
+        contract_id = contract.data.id
+        document_id = document.data.id
+        target_title = 'test_put_ok'
+
+        title_before_put = get_document(self, contract_id, document_id).title
+        self.assertNotEqual(title_before_put, target_title, 'titles must differ')
+
+        put_document(self, contract, document_id, data={'title': target_title})
+
+        title_after_put = get_document(self, contract_id, document_id).title
+        self.assertEqual(target_title, title_after_put, 'title was not changed')
