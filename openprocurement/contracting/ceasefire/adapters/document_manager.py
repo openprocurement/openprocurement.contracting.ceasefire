@@ -2,7 +2,6 @@
 from zope.interface import implementer
 
 from openprocurement.api.utils import validate_with
-from openprocurement.api.utils.documents import upload_file
 from openprocurement.contracting.core.interfaces import (
     IDocumentManager,
 )
@@ -22,7 +21,7 @@ class CeasefireContractDocumentManager(object):
 
     @validate_with(create_validators)
     def create_document(self, request):
-        document = upload_file(request)
+        document = request.validated['document']
         contract = request.context
 
         contract.documents.append(document)
@@ -31,7 +30,7 @@ class CeasefireContractDocumentManager(object):
         pass
 
     def put_document(self, request):
-        document = upload_file(request)
+        document = request.validated['document']
         contract = request.context.__parent__
 
         contract.documents.append(document)
