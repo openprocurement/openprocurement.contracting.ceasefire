@@ -60,13 +60,10 @@ class Milestone(Model):
     title_ru = StringType()
     type_ = StringType(choices=constants.MILESTONE_TYPES, serialized_name='type')
 
-    def get_role(self):
-        root = self.__parent__.__parent__  # contract->root
-        request = root.request
-        auth_role = request.authenticated_role
+    def get_role(self, auth_role):
         if auth_role == 'Administrator':
             return 'Administrator'
-        return 'edit_{0}'.format(request.context.status)
+        return 'edit_{0}'.format(self.status)
 
 
 class ICeasefireContract(Interface):
@@ -99,13 +96,11 @@ class Contract(BaseContract):
     if SANDBOX_MODE:
         sandbox_parameters = StringType()
 
-    def get_role(self):
-        root = self.__parent__
-        request = root.request
-        if request.authenticated_role == 'Administrator':
+    def get_role(self, auth_role):
+        if auth_role == 'Administrator':
             role = 'Administrator'
-        elif request.authenticated_role == 'caravan':
+        elif auth_role == 'caravan':
             role = 'caravan'
         else:
-            role = 'edit_{}'.format(request.context.status)
+            role = 'edit_{}'.format(self.status)
         return role
