@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, date
 from mock import (
     MagicMock,
     Mock,
+    patch,
 )
 from openprocurement.api.constants import (
     SANDBOX_MODE,
@@ -21,59 +22,59 @@ from openprocurement.contracting.ceasefire.adapters.contract_manager import (
 from openprocurement.contracting.ceasefire.adapters.milestone_manager import (
     CeasefireMilestoneManager,
 )
-from openprocurement.contracting.ceasefire.models import (
-    Contract,
-)
 from openprocurement.contracting.ceasefire.constants import (
     MILESTONE_APPROVAL_DUEDATE_OFFSET,
     MILESTONE_FINANCING_DUEDATE_OFFSET,
     MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS,
     MILESTONE_TYPES,
 )
-
-from .fixtures.data import contract_create_data
+from openprocurement.contracting.ceasefire.tests.fixtures.helpers import (
+    prepare_contract_with_milestones,
+    prepare_contract,
+)
+from openprocurement.api.tests.fixtures.mocks import event_mock
 
 
 class CeasefireContractManagerTest(unittest.TestCase):
 
-    def setUp(self):
-        self.contract = Contract(contract_create_data)
-        self.contract.validate()
-        self.mocked_request = Mock()
-        self.mocked_request.validated = {'contract': self.contract}
+    @patch('openprocurement.contracting.ceasefire.adapters.contract_manager.is_accreditated')
+    def test_create_contract(self, is_accr_mock):
+        is_accr_mock.return_value = True
 
-    def test_create_contract(self):
-        manager = CeasefireContractManager(Mock())
+        event = event_mock()
+        del event.ctx.cache  # ctx on POST has no cache at all
+        contract = prepare_contract()
+        event.data = contract.serialize()
 
-        manager.create_contract(self.mocked_request)
+        manager = CeasefireContractManager()
 
-        self.assertEqual(self.contract.status, 'active.confirmation')
+        with patch.object(manager.de, 'save') as save_mock:
+            save_mock.return_value = True
+            manager.create_contract(event)
+
+        self.assertEqual(contract.status, 'active.confirmation')
 
 
 class CeasefireMilestoneManagerTest(unittest.TestCase):
 
-    def prepare_mocked_contract(self):
-        self.contract = Contract(contract_create_data)
-        self.contract.validate()
-        self.mocked_request = Mock()
-        self.mocked_request.validated = {'contract': self.contract}
-
     def test_create_milestones(self):
-        self.prepare_mocked_contract()
-        manager = CeasefireMilestoneManager(Mock())
-        self.contract.dateSigned = datetime.now()
+        event = event_mock()
+        contract = prepare_contract()
+        contract.dateSigned = datetime.now()
+        event.ctx.high = contract
+        manager = CeasefireMilestoneManager()
 
-        manager.create_milestones(self.mocked_request)
+        manager.create_milestones(event.ctx.high)
 
-        self.assertEqual(len(self.contract.milestones), 3, 'milestones were not created')
+        self.assertEqual(len(contract.milestones), 3, 'milestones were not created')
 
     def test_populate_milestones(self):
-        self.prepare_mocked_contract()
-        manager = CeasefireMilestoneManager(Mock())
+        contract = prepare_contract()
+        manager = CeasefireMilestoneManager()
 
-        self.contract.dateSigned = datetime.now()
+        contract.dateSigned = datetime.now()
 
-        milestones = manager.populate_milestones(self.contract)
+        milestones = manager.populate_milestones(contract)
 
         self.assertEqual(len(milestones), 3, '3 milestones must be generated')
         generated_types = [milestone.type_ for milestone in milestones]
@@ -89,118 +90,109 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
             'dueDate of financing milestone has not been generated')
 
     def test_set_dueDate_financing(self):
-        self.prepare_mocked_contract()
-        manager = CeasefireMilestoneManager(Mock())
+        contract = prepare_contract_with_milestones()
+        manager = CeasefireMilestoneManager()
 
-        milestone_mock = Mock()
-        milestone_mock.type_ = 'financing'
+        milestone = contract.milestones[0]
 
-        self.contract.dateSigned = datetime.now()
+        contract.dateSigned = datetime.now()
         target_dueDate = calculate_business_date(
-            self.contract.dateSigned,
+            contract.dateSigned,
             MILESTONE_FINANCING_DUEDATE_OFFSET,
             context=None,
             working_days=False,
             specific_hour=18,
             result_is_working_day=True)
-        manager.set_dueDate(milestone_mock, self.contract)
-        self.assertEqual(milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
+        manager.set_dueDate(milestone, contract)
+        self.assertEqual(milestone.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
     def test_set_dueDate_approval(self):
-        self.prepare_mocked_contract()
-        manager = CeasefireMilestoneManager(Mock())
+        contract = prepare_contract_with_milestones()
 
-        financing_milestone_mock = Mock()
-        financing_milestone_mock.type_ = 'financing'
-        financing_milestone_mock.get.return_value = 'financing'
-        financing_milestone_mock.dateMet = datetime.now()
-        approval_milestone_mock = Mock()
-        approval_milestone_mock.type_ = 'approval'
-        self.contract.milestones = (financing_milestone_mock, approval_milestone_mock)
+        manager = CeasefireMilestoneManager()
 
-        self.contract.dateSigned = datetime.now()
+        financing_milestone, approval_milestone = contract.milestones[:2]
+        financing_milestone.dateMet = datetime.now()
+
+        contract.dateSigned = datetime.now()
         target_dueDate = calculate_business_date(
-            financing_milestone_mock.dateMet,
+            financing_milestone.dateMet,
             MILESTONE_APPROVAL_DUEDATE_OFFSET,
             context=None,
             working_days=False,
             specific_hour=18,
             result_is_working_day=True)
-        manager.set_dueDate(approval_milestone_mock, self.contract)
-        self.assertEqual(approval_milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
+        manager.set_dueDate(approval_milestone, contract)
+        self.assertEqual(approval_milestone.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
     def test_set_dueDate_reporting_auto(self):
-        self.prepare_mocked_contract()
-        manager = CeasefireMilestoneManager(Mock())
+        contract = prepare_contract_with_milestones()
+        manager = CeasefireMilestoneManager()
 
-        approval_milestone_mock = Mock()
-        approval_milestone_mock.type_ = 'approval'
-        approval_milestone_mock.get.return_value = 'approval'
-        approval_milestone_mock.dateMet = datetime.now()
-        reporting_milestone_mock = Mock()
-        reporting_milestone_mock.type_ = 'reporting'
-        reporting_milestone_mock.dueDate = None
-        self.contract.milestones = (approval_milestone_mock, reporting_milestone_mock)
-        self.contract.dateSigned = datetime.now()
+        approval_milestone = contract.milestones[1]
+        approval_milestone.dateMet = datetime.now()
+        reporting_milestone = contract.milestones[2]
+        contract.dateSigned = datetime.now()
 
         target_dueDate = datetime.combine(
             date(
-                approval_milestone_mock.dateMet.year + MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS,
-                approval_milestone_mock.dateMet.month,
-                approval_milestone_mock.dateMet.day,
+                approval_milestone.dateMet.year + MILESTONE_REPORTING_DUEDATE_OFFSET_YEARS,
+                approval_milestone.dateMet.month,
+                approval_milestone.dateMet.day,
             ),
-            approval_milestone_mock.dateMet.time()
+            approval_milestone.dateMet.time()
         )
-        manager.set_dueDate(reporting_milestone_mock, self.contract)
-        self.assertEqual(reporting_milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
+        manager.set_dueDate(reporting_milestone, contract)
+        self.assertEqual(reporting_milestone.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
     def test_set_dueDate_financing_with_accelerator(self):
-        self.prepare_mocked_contract()
-        manager = CeasefireMilestoneManager(Mock())
+        contract = prepare_contract_with_milestones()
+        manager = CeasefireMilestoneManager()
 
-        milestone_mock = Mock()
-        milestone_mock.type_ = 'financing'
+        milestone = contract.milestones[0]
 
         if SANDBOX_MODE:
-            self.contract.sandbox_parameters = 'quick, accelerator=1440'
-        self.contract.dateSigned = datetime.now()
+            contract.sandbox_parameters = 'quick, accelerator=1440'
+        contract.dateSigned = datetime.now()
 
         target_dueDate = calculate_business_date(
-            self.contract.dateSigned,
+            contract.dateSigned,
             MILESTONE_FINANCING_DUEDATE_OFFSET,
-            context=self.contract,
+            context=contract,
             working_days=False,
             specific_hour=18,
             result_is_working_day=True)
-        manager.set_dueDate(milestone_mock, self.contract)
-        self.assertEqual(milestone_mock.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
+        manager.set_dueDate(milestone, contract)
+        self.assertEqual(milestone.dueDate, target_dueDate, 'dueDate has been calculated incorrectly')
 
     def test_change_milestone_to_not_met(self):
-        manager = CeasefireMilestoneManager(Mock())
-        mocked_request = Mock()
+        manager = CeasefireMilestoneManager()
+        event = event_mock()
+        contract = prepare_contract_with_milestones()
+        milestone = contract.milestones[0]
 
-        mocked_milestone = Mock()
-        mocked_milestone.id = '1'
-        mocked_contract = Mock()
+        event.ctx.high = contract
+        event.ctx.low = milestone
+        event.ctx.low.id = 'fee5c030352541b094dd93ad4e643ed9'
+
         doc_mock = Mock()
         doc_mock.documentOf = 'milestone'
-        doc_mock.relatedItem = '1'
-        mocked_contract.documents = [doc_mock]
+        doc_mock.relatedItem = 'fee5c030352541b094dd93ad4e643ed9'
+        contract.documents = [doc_mock]
 
-        mocked_milestone.__parent__ = mocked_contract
-        mocked_milestone.status = 'processing'
+        milestone.__parent__ = contract
 
-        mocked_request.context = mocked_milestone
-        mocked_request.validated = {'data': {}}
-        mocked_request.json = {'data': {'status': 'notMet'}}
+        event.data = {'status': 'notMet'}
 
-        manager.change_milestone(mocked_request)
+        with patch.object(manager.de, 'save') as save_mock:
+            save_mock.return_value = True
+            manager.change_milestone(event)
 
-        self.assertEqual(mocked_milestone.status, 'notMet')
-        self.assertEqual(mocked_contract.status, 'pending.unsuccessful')
+        self.assertEqual(milestone.status, 'notMet')
+        self.assertEqual(contract.status, 'pending.unsuccessful')
 
     def test_choose_status_to_met(self):
-        manager = CeasefireMilestoneManager(Mock())
+        manager = CeasefireMilestoneManager()
         mocked_milestone = Mock()
         mocked_milestone.dueDate = datetime.now()
         # set `dateMet` before `dueDate` to acquire `met` status
@@ -209,7 +201,7 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
         assert mocked_milestone.status == 'met', 'Milestone status was not choosed correctly'
 
     def test_choose_status_to_partially_met(self):
-        manager = CeasefireMilestoneManager(Mock())
+        manager = CeasefireMilestoneManager()
         mocked_milestone = Mock()
         mocked_milestone.dueDate = datetime.now()
         # set `dateMet` after `dueDate` to acquire `partiallyMet` status
@@ -221,7 +213,7 @@ class CeasefireMilestoneManagerTest(unittest.TestCase):
 class SetContractStatusTest(unittest.TestCase):
 
     def setUp(self):
-        self.manager = CeasefireMilestoneManager(Mock())
+        self.manager = CeasefireMilestoneManager()
         self.contract = Mock()
 
         financing_milestone = MagicMock()

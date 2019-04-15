@@ -2,6 +2,7 @@
 from copy import deepcopy
 from datetime import timedelta
 from munch import munchify
+from mock import Mock
 
 from openprocurement.api.models.ocds import (
     BaseDocument,
@@ -242,3 +243,19 @@ def prepare_contract_with_document(test_case, contract_data=None):
     response = post_document(test_case, contract)
     document = munchify(response.json)
     return (contract, document)
+
+
+def prepare_contract():
+    contract = Contract(contract_create_data)
+    contract.validate()
+
+    return contract
+
+def prepare_contract_with_milestones():
+    from openprocurement.contracting.ceasefire.adapters.milestone_manager import CeasefireMilestoneManager
+
+    contract = prepare_contract()
+    milestone_manager = CeasefireMilestoneManager()
+    milestone_manager.create_milestones(contract)
+
+    return contract
