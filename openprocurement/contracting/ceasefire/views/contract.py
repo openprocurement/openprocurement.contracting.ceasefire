@@ -11,7 +11,7 @@ from openprocurement.contracting.ceasefire.constants import (
     CONTRACT_DEFAULT_TYPE,
     ENDPOINTS,
 )
-from openprocurement.api.utils.validation import validate_data_to_event
+from openprocurement.api.validation import validate_data_to_event
 from openprocurement.contracting.core.manager_discovery import ContractManagerDiscovery
 
 
