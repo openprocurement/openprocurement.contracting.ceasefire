@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from uuid import uuid4
 from datetime import timedelta
 from webtest.app import AppError
