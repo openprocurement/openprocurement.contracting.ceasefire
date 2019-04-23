@@ -26,11 +26,11 @@ class CeasefireMilestoneResource(APIResource):
     def get(self):
         return {'data': self.request.context.serialize()}
 
+    @handle_errors_on_view
     @json_view(
         permission='edit_contract',
         content_type='application/json',
         validators=(validate_data_to_event,))
-    @handle_errors_on_view
     def patch(self):
         event = self.request.event
         md = ContractManagerDiscovery(self.request.registry.manager_registry)
