@@ -124,8 +124,11 @@ class ContractResourceTest(BaseWebTest):
         contract = create_contract(self)
         contract_id_2 = contract.data.id
         self.app.get(ENDPOINTS['contracts_collection'])
-        time.sleep(0.2)  # wait for delayed indexation of listing, seconds
-        response = self.app.get(ENDPOINTS['contracts_collection'])
+        for i in range(10):
+            response = self.app.get(ENDPOINTS['contracts_collection'])
+            if len(response.json['data']) == 2:
+                break
+            time.sleep(i)  # wait for delayed indexation of listing, seconds
         keys_returned = [result['id'] for result in response.json['data']]
         assert contract_id_1 in keys_returned
         assert contract_id_2 in keys_returned
